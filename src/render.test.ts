@@ -1,0 +1,98 @@
+import { describe, expect, it, vi } from "vitest";
+import { defaultConfig } from "./config";
+import { project, render } from "./render";
+import type { GameState } from "./types";
+
+const c = defaultConfig;
+const W = 800;
+const H = 600;
+
+describe("project", () => {
+  it("scale shrinks monotonically with depth", () => {
+    let prev = Infinity;
+    for (let d = 0; d <= c.viewDistance; d += 5) {
+      const p = project(d, 1, c, W, H);
+      expect(p.scale).toBeLessThanOrEqual(prev);
+      prev = p.scale;
+    }
+    expect(project(0, 1, c, W, H).scale).toBeCloseTo(1);
+  });
+
+  it("is symmetric around the center lane", () => {
+    for (const d of [0, 20, 80]) {
+      const l = project(d, 0, c, W, H);
+      const m = project(d, 1, c, W, H);
+      const r = project(d, 2, c, W, H);
+      expect(m.x).toBeCloseTo(W / 2);
+      expect(m.x - l.x).toBeCloseTo(r.x - m.x);
+    }
+  });
+
+  it("reaches the horizon at viewDistance and clamps beyond", () => {
+    const far = project(c.viewDistance, 1, c, W, H);
+    const farther = project(c.viewDistance * 3, 1, c, W, H);
+    expect(far.y).toBeCloseTo(H * 0.36);
+    expect(farther.y).toBeCloseTo(far.y);
+    expect(project(0, 1, c, W, H).y).toBeGreaterThan(far.y);
+    expect(project(50, 1, c, W, H).y).toBeLessThan(project(10, 1, c, W, H).y);
+  });
+
+  it("returns finite values", () => {
+    for (const d of [-5, 0, 1, 60, 120, 1e6]) {
+      for (const lx of [-1, 0, 1, 2, 3]) {
+        const p = project(d, lx, c, W, H);
+        expect(Number.isFinite(p.x) && Number.isFinite(p.y) && Number.isFinite(p.scale)).toBe(true);
+      }
+    }
+  });
+});
+
+function fakeCtx(): CanvasRenderingContext2D {
+  const grad = { addColorStop: vi.fn() };
+  const target: Record<string | symbol, unknown> = {};
+  return new Proxy(target, {
+    get(t, key) {
+      if (key === "createLinearGradient" || key === "createRadialGradient") return () => grad;
+      if (key in t) return t[key];
+      return () => {};
+    },
+    set(t, key, value) {
+      t[key] = value;
+      return true;
+    },
+  }) as unknown as CanvasRenderingContext2D;
+}
+
+function state(phase: GameState["phase"]): GameState {
+  return {
+    phase,
+    tier: 2,
+    speed: 36,
+    distance: 123.4,
+    gems: 3,
+    gemGoal: 10,
+    obstacles: [
+      { id: 1, kind: "gumdrop", lane: 0, z: 150 },
+      { id: 2, kind: "candy-cane", lane: 1, z: 180 },
+      { id: 3, kind: "licorice-arch", lane: 2, z: 124 },
+    ],
+    collectibles: [{ id: 4, lane: 1, z: 160 }],
+    portalZ: phase === "portal" ? 200 : null,
+    player: { lane: 1, laneX: 1, pose: "slide", poseTimeLeft: 0.2, jumpHeight: 0.4 },
+    bestTier: 3,
+    nextId: 5,
+    spawnedUntil: 250,
+    rngState: 1,
+  };
+}
+
+describe("render", () => {
+  it("draws every phase without throwing or mutating state", () => {
+    for (const phase of ["running", "dead", "portal"] as const) {
+      const s = state(phase);
+      const before = JSON.stringify(s);
+      expect(() => render(fakeCtx(), s, c, W, H, 1.5)).not.toThrow();
+      expect(JSON.stringify(s)).toBe(before);
+    }
+  });
+});
