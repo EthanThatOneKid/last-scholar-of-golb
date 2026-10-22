@@ -26,8 +26,19 @@ through the Land of Ooo to end all life.
   good.
 - Audio plan. Prototype with original or placeholder sound only.
 
+## Tech decisions
+
+- Renderer: plain Canvas 2D, no game framework. Pseudo-3D by scaling sprites
+  with depth.
+- Controls (v1): keyboard only. Left/Right or A/D change lanes, Up/Space jump,
+  Down/S slide.
+- First playable: Candy Kingdom only. Three obstacle types, gems, and a portal
+  at the gem goal.
+- Tuning: in-game debug panel with live controls for speed, gem goal and
+  obstacle density. Defaults live in one config file.
+
 ## Open questions
 
-- Gem count per tier and speed curve
-- Obstacle set per environment (Candy Kingdom, Ice Kingdom, ...)
-- Controls: keyboard and touch swipe
+- Starting gem goal and speed growth per tier (tune with the debug panel)
+- The three Candy Kingdom obstacle types
+- Touch controls (after v1)
