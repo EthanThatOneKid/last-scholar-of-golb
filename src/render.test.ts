@@ -104,4 +104,10 @@ describe("render", () => {
       expect(() => render(fakeCtx(), s, c, W, H, 1.5)).not.toThrow();
     }
   });
+
+  it("projects the near road edge below the bottom of the canvas", () => {
+    for (const viewDistance of [60, 120, 300]) {
+      expect(project(-1000, 1, { ...c, viewDistance }, W, H).y).toBeGreaterThan(H);
+    }
+  });
 });

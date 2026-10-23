@@ -12,7 +12,14 @@ const HORIZON = 0.36; // fraction of height
 const GROUND = 0.86; // fraction of height where relDepth 0 sits
 const ROAD_HALF = 0.4; // road half-width as fraction of width at scale 1
 const PERSP_K = 8; // perspective strength (relative to viewDistance)
-const MIN_DEPTH = -2;
+// How far behind the player the road is projected, as a fraction of viewDistance. Perspective
+// is relative to viewDistance, so this keeps the road's near edge below the bottom of the canvas
+// for any viewDistance.
+const BEHIND_FRACTION = 0.05;
+
+function minDepth(c: GameConfig): number {
+  return -Math.max(1, c.viewDistance) * BEHIND_FRACTION;
+}
 
 export function project(
   relDepth: number,
@@ -23,7 +30,7 @@ export function project(
 ): Projection {
   const vd = Math.max(1, c.viewDistance);
   const k = PERSP_K / vd;
-  const d = Math.min(vd, Math.max(MIN_DEPTH, relDepth));
+  const d = Math.min(vd, Math.max(minDepth(c), relDepth));
   const p = 1 / (1 + d * k);
   const pH = 1 / (1 + vd * k);
   const f = (p - pH) / (1 - pH); // 1 at depth 0, 0 at horizon
@@ -95,9 +102,9 @@ function drawRoad(
   const phase = s.distance % band;
   const base = Math.floor(s.distance / band);
   const n = Math.ceil(vd / band) + 1;
-  for (let i = n; i >= 0; i--) {
-    const d0 = Math.min(vd, Math.max(0, i * band - phase));
-    const d1 = Math.min(vd, Math.max(0, (i + 1) * band - phase));
+  for (let i = n; i >= -2; i--) {
+    const d0 = Math.min(vd, Math.max(minDepth(c), i * band - phase));
+    const d1 = Math.min(vd, Math.max(minDepth(c), (i + 1) * band - phase));
     if (d1 <= d0) continue;
     const a = project(d0, 0, c, w, h);
     const b = project(d1, 0, c, w, h);
