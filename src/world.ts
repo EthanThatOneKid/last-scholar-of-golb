@@ -34,6 +34,7 @@ export function createState(c: GameConfig, tier = 1, bestTier = 1): GameState {
     player: { lane: 1, laneX: 1, pose: "run", poseTimeLeft: 0, jumpHeight: 0 },
     bestTier: Math.max(bestTier, tier),
     nextId: 1,
+    lastCrownZ: -1e9,
     spawnedUntil: START_GRACE,
     rngState: 0x9e3779b9,
   };
@@ -59,7 +60,9 @@ function spawn(state: GameState, c: GameConfig): void {
     if (rand(state) < pGem) {
       const lane = randLane(state);
       const z = start + rand(state) * SLICE;
-      if (!(lane === obstacleLane && Math.abs(z - obstacleZ) < 2)) {
+      const clear = !(lane === obstacleLane && Math.abs(z - obstacleZ) < 2);
+      if (clear && z - state.lastCrownZ >= c.crownSpacing) {
+        state.lastCrownZ = z;
         const ice = rand(state) < c.iceCrownChance;
         state.collectibles.push({
           id: state.nextId++,

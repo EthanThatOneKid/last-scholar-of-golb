@@ -82,6 +82,7 @@ function state(phase: GameState["phase"]): GameState {
     player: { lane: 1, laneX: 1, pose: "slide", poseTimeLeft: 0.2, jumpHeight: 0.4 },
     bestTier: 3,
     nextId: 5,
+    lastCrownZ: 160,
     spawnedUntil: 250,
     rngState: 1,
   };

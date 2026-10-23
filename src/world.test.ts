@@ -209,4 +209,20 @@ describe("world", () => {
       expect(s.tier).toBe(2);
     });
   });
+
+  it("keeps crowns at least crownSpacing apart", () => {
+    const dense: GameConfig = { ...defaultConfig, gemDensity: 20, crownSpacing: 30, obstacleDensity: 0, densityPerTier: 0 };
+    const s = createState(dense);
+    const zs = new Set<number>();
+    for (let i = 0; i < 60 * 60; i++) {
+      update(s, DT, [], dense);
+      if ((s.phase as string) === "dead") s.phase = "running";
+      for (const g of s.collectibles) zs.add(g.z);
+    }
+    const sorted = [...zs].sort((a, b) => a - b);
+    expect(sorted.length).toBeGreaterThan(5);
+    for (let i = 1; i < sorted.length; i++) {
+      expect(sorted[i] - sorted[i - 1]).toBeGreaterThanOrEqual(30 - 1e-9);
+    }
+  });
 });

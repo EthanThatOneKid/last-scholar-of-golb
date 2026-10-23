@@ -12,6 +12,8 @@ export interface GameConfig {
   densityPerTier: number;
   /** Expected crowns per 100 world units. */
   gemDensity: number;
+  /** Minimum world distance between any two crowns, whatever lane they are in. */
+  crownSpacing: number;
   /** Chance in [0, 1] that a crown is the Ice King's Crown (3 gems) instead of a tiara (1). */
   iceCrownChance: number;
   laneChangeSeconds: number;
@@ -32,6 +34,7 @@ export const defaultConfig: GameConfig = {
   obstacleDensity: 6,
   densityPerTier: 1,
   gemDensity: 1.5,
+  crownSpacing: 30,
   iceCrownChance: 0.2,
   laneChangeSeconds: 0.12,
   jumpSeconds: 0.6,

@@ -16,6 +16,7 @@ export const DEBUG_FIELDS: readonly DebugField[] = [
   { key: "obstacleDensity", label: "obstacle density", min: 0, max: 20, step: 0.1 },
   { key: "densityPerTier", label: "density / tier", min: 0, max: 5, step: 0.1 },
   { key: "gemDensity", label: "crown density", min: 0, max: 20, step: 0.1 },
+  { key: "crownSpacing", label: "crown spacing", min: 0, max: 100, step: 1 },
   { key: "iceCrownChance", label: "ice crown chance", min: 0, max: 1, step: 0.05 },
   { key: "laneChangeSeconds", label: "lane change s", min: 0.04, max: 0.5, step: 0.01 },
   { key: "jumpSeconds", label: "jump s", min: 0.2, max: 1.5, step: 0.01 },

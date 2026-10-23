@@ -63,6 +63,8 @@ export interface GameState {
   /** Highest tier reached in this session, for display. */
   bestTier: number;
   nextId: number;
+  /** World z of the most recently spawned crown, used to keep crowns spaced apart. */
+  lastCrownZ: number;
   /** Furthest world z that has been populated with obstacles and gems. */
   spawnedUntil: number;
   rngState: number;
