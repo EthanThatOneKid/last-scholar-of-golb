@@ -51,6 +51,9 @@ Saved for the deferred rhythm/monologue layer. Not used in the game yet.
 > light has been extinguished. You are strong, child. But I am beyond strength.
 > I am the end. And I have come for you.
 
+> Before there was time. Before there was anything. There was nothing. And
+> before there was nothing. There were monsters.
+
 ## Open questions
 
 - Starting gem goal and speed growth per tier (tune with the debug panel)
