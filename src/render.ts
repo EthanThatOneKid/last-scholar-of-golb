@@ -409,7 +409,7 @@ function centered(
   ctx.fillText(text, x, y);
 }
 
-const WISH = "I wish for the end of all life.";
+const WISH = "I wish for the extinction of all life.";
 
 function smooth(t: number): number {
   const x = Math.min(1, Math.max(0, t));

@@ -19,8 +19,8 @@ through the Land of Ooo to end all life.
 - Tier reached is the score.
 - Entering the portal plays a short cutscene (about 6 seconds, skippable with
   Space or Enter after 1 second): Prismo's chamber, the Enchiridion glowing with
-  its nine gems, and the Lich wishing for the end of all life. It flashes back
-  into the run at the next tier. The wish wording is placeholder, not a quote.
+  its nine gems, and the Lich wishing for the extinction of all life. It flashes back
+  into the run at the next tier. Wish line: "I wish for the extinction of all life."
 
 ## Deferred
 
