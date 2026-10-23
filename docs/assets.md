@@ -49,7 +49,7 @@ centered on the lane.
 | `crown.ice-king-crown`    | 6u     | center | Three rubies, worth 3. Drawn 1.3x larger in play. |
 | `portal`                  | ~2.2x portal radius | center | Prismo's portal.                |
 | `lich.idle`               | 17u    | bottom | **Sheet, in the game.** Stands in for run and jump until they have their own. |
-| `lich.run` / `lich.jump`  | 17u    | bottom | Sheets or images. Jump height is applied by the game. |
+| `lich.run` / `lich.jump`  | 17u    | bottom | Sheets or images. Jump height is applied by the game. A contact shadow is drawn under every Lich sprite. |
 | `lich.slide`              | 7u     | bottom | Must stay low enough to pass under the arch. The idle sheet is never used for a slide. |
 | `lich.dead`               | 17u    | bottom | Shown once the Lich has hit something.         |
 | `lich.wish`               | 42% of screen height | bottom | Cutscene Lich, on the left of the screen. |
@@ -61,8 +61,9 @@ and finally the built-in shape. The backdrop, road and scenery are still drawn w
 ## Sprite sheets
 
 A sheet is a horizontal strip of equal-width frames. Frames are drawn at the same height as a plain
-image, so keep every frame's head at the same height and the body centered in its cell; only the
-cape or limbs should move.
+image, so keep the body centered in its cell and the feet (or hem) on the same baseline in every
+frame; only the cape or limbs should move. Feet-level is why `lich-idle.png` was sliced with
+`--align bottom`: the sprite's bottom edge is the ground line.
 
 - Playback is a **loop driven by wall-clock time**, not tied to the pose. A jump is not synchronized
   to frame 0, so write jump, slide and dead sheets as seamless loops. One-shot playback is not
@@ -71,7 +72,7 @@ cape or limbs should move.
   channel, so frames only need empty space between them, not a clean grid. Anchor modes and flags
   are documented at the top of the script.
 - `public/assets/images/lich-idle.png` was made with:
-  `python tools/slice_sheet.py <sheet.png> --frames 8 --out public/assets/images/lich-idle.png --anchor left-edge --align top`
+  `python tools/slice_sheet.py <sheet.png> --frames 8 --out public/assets/images/lich-idle.png --anchor left-edge --align bottom`
 - Prompts for the remaining Lich poses are in [`lich-sprite-prompts.md`](lich-sprite-prompts.md).
 
 ## Audio

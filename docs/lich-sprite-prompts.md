@@ -5,7 +5,10 @@ Prompts for the Lich poses the game still needs, written to match the first shee
 sheet as a reference image if your generator supports one, and say "same character, same style".
 
 The shipped idle sheet is the model: 8 frames in a 4x2 grid on a transparent background, clear
-empty space between frames, the head in the same spot in every frame, only the cloak moving.
+empty space between frames, the figure the same size in every frame, only the cloak moving. Note
+that the idle art **hovers** (its feet dangle above the ground), which is why running looked like
+hovering. The game now draws a contact shadow under it, but the run sheet should have real
+ground contact (see below).
 `tools/slice_sheet.py` relies on that.
 
 ## Style block (use with every pose)
@@ -17,7 +20,8 @@ empty space between frames, the head in the same spot in every frame, only the c
 > lines, no gradients, no texture, no background scenery, no shadows, no text.
 >
 > Layout: a grid of equal cells on a plain flat white background. The character is the same size in
-> every cell. The head is at exactly the same height and horizontal position in every cell. Leave a
+> every cell. The head is at exactly the same height and horizontal position in every cell, and the feet (or
+> hem) rest on the same baseline in every cell. Leave a
 > wide empty gap between cells so that nothing, including cloak tips, crosses into the next cell.
 > Consistent design, proportions and colors in every frame.
 
@@ -36,7 +40,8 @@ want it.
 
 > Pose: viewed from behind, as if the camera follows the character. A looping run cycle of 8 frames
 > in a 4x2 grid. The figure glides and strides forward, leaning slightly forward, skeletal feet
-> alternating beneath the hem, arms swinging a little. The cloak streams behind and to the sides
+> alternating beneath the hem, arms swinging a little. **The feet visibly plant on the ground with
+> each stride: a foot touches the floor in every frame, and the figure never hovers.** The cloak streams behind and to the sides
 > with a strong whip, alternating left and right through the loop, and the last frame flows
 > seamlessly into the first.
 
@@ -76,8 +81,9 @@ want it.
   moves between frames, and any frame that is a different size from the rest.
 - **Slice with the tool, which tells you if frames touch:**
   `python tools/slice_sheet.py sheet.png --frames 6 --out public/assets/images/lich-jump.png --preview preview.png`
-  Use `--anchor left-edge` if a cape tip flares into the head area (as in the idle sheet), and
-  `--align bottom` if feet should stay level instead of heads. Open the preview and check that the
+  Use `--anchor left-edge` if a cape tip flares into the head area (as in the idle sheet).
+  `--align bottom` (feet level, the default to use for grounded poses) puts the sprite's bottom
+  edge on the ground line; `--align top` keeps heads level instead. Open the preview and check that the
   red center line passes through the same point on the body in every frame.
 - **Registering:** add the strip to `sheets` in `src/asset-manifest.ts` with the frame count, and add
   a credits row in [`assets.md`](assets.md).

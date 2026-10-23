@@ -381,6 +381,12 @@ function drawPlayer(
   const stride = s.phase === "dead" ? 0 : Math.sin(time * 14) * 0.6 * u;
   const gy = p.y - lift;
   const spriteH = (slide ? 7 : 17) * u;
+  // Contact shadow, under the sprite too: it is what makes a floating figure read as standing on
+  // the road, and it stays on the ground while a jump lifts the Lich.
+  ctx.fillStyle = "rgba(40,10,60,0.4)";
+  ctx.beginPath();
+  ctx.ellipse(p.x, p.y, bodyW * 1.3 * (1 - pl.jumpHeight * 0.3), u * 1.4, 0, 0, TAU);
+  ctx.fill();
   // Most specific first. The idle loop stands in for run and jump, but not for slide: it is far too
   // tall to pass under the licorice arch.
   const names = [
@@ -392,11 +398,6 @@ function drawPlayer(
   for (const name of names) {
     if (drawSprite(ctx, assets, name, p.x, gy, spriteH, "bottom", time)) return;
   }
-  // shadow
-  ctx.fillStyle = "rgba(40,10,60,0.35)";
-  ctx.beginPath();
-  ctx.ellipse(p.x, p.y, bodyW * (1 - pl.jumpHeight * 0.3), u * 1.2, 0, 0, TAU);
-  ctx.fill();
   // robe
   ctx.fillStyle = "#1d1630";
   ctx.beginPath();
