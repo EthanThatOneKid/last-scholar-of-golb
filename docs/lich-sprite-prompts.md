@@ -38,12 +38,20 @@ want it.
 
 ### `lich.run` (the main pose, so spend the most effort here)
 
-> Pose: viewed from behind, as if the camera follows the character. A looping run cycle of 8 frames
-> in a 4x2 grid. The figure glides and strides forward, leaning slightly forward, skeletal feet
-> alternating beneath the hem, arms swinging a little. **The feet visibly plant on the ground with
-> each stride: a foot touches the floor in every frame, and the figure never hovers.** The cloak streams behind and to the sides
-> with a strong whip, alternating left and right through the loop, and the last frame flows
-> seamlessly into the first.
+> Pose: viewed from behind, as if the camera follows the character. A looping 8-frame run cycle in
+> a 4x2 grid, one stride per half loop: (1) right foot plants, (2) body dips onto it, (3) the left
+> foot passes forward, (4) the body rises, (5) left foot plants, (6) body dips, (7) the right foot
+> passes, (8) the body rises, and frame 8 flows seamlessly into frame 1. The figure leans slightly
+> forward and its skeletal arms swing a little against the stride.
+>
+> **Grounded: the lowest point in every frame is a skeletal foot planted flat on the ground, with
+> its sole on exactly the same baseline in every cell.** The other foot lifts only a short way, no
+> more than about a tenth of the figure's height. Never floating, never hovering, no gap of air under
+> the planted foot, and no toes pointing down into empty space. The hem of the cloak sweeps around
+> the ankles so that the planted foot stays visible below it.
+>
+> The cloak streams behind and to the sides with a strong whip, swinging left on one stride and
+> right on the next. It moves with the run but does not lift the body off the ground.
 
 ### `lich.jump`
 
