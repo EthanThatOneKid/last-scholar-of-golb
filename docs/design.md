@@ -41,6 +41,16 @@ through the Land of Ooo to end all life.
 - Tuning: in-game debug panel with live controls for speed, gem goal and
   obstacle density. Defaults live in one config file.
 
+## Monologue source text
+
+Saved for the deferred rhythm/monologue layer. Not used in the game yet.
+
+> Fall. You are alone, child. There is only darkness for you. And the only death
+> for your people. These ancients are just the beginning. I recommend a great
+> and terrible army. We will sail to a billion worlds. We will sail until every
+> light has been extinguished. You are strong, child. But I am beyond strength.
+> I am the end. And I have come for you.
+
 ## Open questions
 
 - Starting gem goal and speed growth per tier (tune with the debug panel)
