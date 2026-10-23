@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Ripped or unlicensed source material. Never commit; see docs/assets.md.
+raw-assets/

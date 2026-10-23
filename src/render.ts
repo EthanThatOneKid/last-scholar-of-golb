@@ -1,4 +1,5 @@
 // Canvas 2D pseudo-3D renderer. Pure drawing: never mutates game state.
+import { type Assets, drawSprite } from "./assets";
 import type { GameConfig } from "./config";
 import type { GameState, Gem, Obstacle } from "./types";
 
@@ -218,10 +219,13 @@ function drawObstacle(
   c: GameConfig,
   w: number,
   h: number,
+  assets?: Assets,
 ): void {
   const p = project(rel, o.lane, c, w, h);
   const u = p.scale * h * 0.01; // unit: ~1% of screen height at scale 1
   const laneW = (w * ROAD_HALF * 2) / 3 * p.scale;
+  const spriteH = o.kind === "gumdrop" ? 9 * u : o.kind === "candy-cane" ? 18 * u : 14 * u;
+  if (drawSprite(ctx, assets, `obstacle.${o.kind}`, p.x, p.y, spriteH)) return;
   if (o.kind === "gumdrop") {
     const r = Math.min(laneW * 0.4, 6 * u);
     ctx.fillStyle = "#3fd16a";
@@ -268,12 +272,14 @@ function drawCrown(
   c: GameConfig,
   w: number,
   h: number,
+  assets?: Assets,
 ): void {
   const p = project(rel, g.lane, c, w, h);
   const ice = g.kind === "ice-king-crown";
   const u = p.scale * h * 0.01 * (ice ? 1.3 : 1);
   const bob = Math.sin(time * 3 + g.id) * 1.2 * u;
   const cy = p.y - 5 * u + bob;
+  if (drawSprite(ctx, assets, `crown.${g.kind}`, p.x, cy, 6 * u, "center")) return;
   const hw = 3.2 * u;
   const hh = 2.4 * u;
   const base = cy + hh * 0.6;
@@ -325,6 +331,7 @@ function drawPortal(
   w: number,
   h: number,
   time: number,
+  assets?: Assets,
 ): void {
   if (s.portalZ == null) return;
   const rel = s.portalZ - s.distance;
@@ -332,6 +339,7 @@ function drawPortal(
   const p = project(rel, 1, c, w, h);
   const r = Math.max(4, p.scale * h * 0.16);
   const cy = p.y - r * 1.05;
+  if (drawSprite(ctx, assets, "portal", p.x, cy, r * 2.2, "center")) return;
   ctx.save();
   ctx.shadowColor = "#b388ff";
   ctx.shadowBlur = 24 * Math.min(1, p.scale * 2) + 6;
@@ -361,6 +369,7 @@ function drawPlayer(
   w: number,
   h: number,
   time: number,
+  assets?: Assets,
 ): void {
   const pl = s.player;
   const p = project(0, pl.laneX, c, w, h);
@@ -371,11 +380,24 @@ function drawPlayer(
   const bodyW = (slide ? 9 : 6) * u;
   const stride = s.phase === "dead" ? 0 : Math.sin(time * 14) * 0.6 * u;
   const gy = p.y - lift;
-  // shadow
-  ctx.fillStyle = "rgba(40,10,60,0.35)";
+  const spriteH = (slide ? 7 : 17) * u;
+  // Contact shadow, under the sprite too: it is what makes a floating figure read as standing on
+  // the road, and it stays on the ground while a jump lifts the Lich.
+  ctx.fillStyle = "rgba(40,10,60,0.4)";
   ctx.beginPath();
-  ctx.ellipse(p.x, p.y, bodyW * (1 - pl.jumpHeight * 0.3), u * 1.2, 0, 0, TAU);
+  ctx.ellipse(p.x, p.y, bodyW * 1.3 * (1 - pl.jumpHeight * 0.3), u * 1.4, 0, 0, TAU);
   ctx.fill();
+  // Most specific first. The idle loop stands in for run and jump, but not for slide: it is far too
+  // tall to pass under the licorice arch.
+  const names = [
+    ...(s.phase === "dead" ? ["lich.dead"] : []),
+    `lich.${pl.pose}`,
+    ...(slide ? [] : ["lich.idle"]),
+    "lich",
+  ];
+  for (const name of names) {
+    if (drawSprite(ctx, assets, name, p.x, gy, spriteH, "bottom", time)) return;
+  }
   // robe
   ctx.fillStyle = "#1d1630";
   ctx.beginPath();
@@ -423,6 +445,25 @@ function smooth(t: number): number {
   return x * x * (3 - 2 * x);
 }
 
+/** Placeholder Lich for the cutscene: a dark hooded figure with glowing eyes. */
+function drawLichShape(ctx: CanvasRenderingContext2D, lx: number, ly: number, lh: number): void {
+  ctx.fillStyle = "#0c0814";
+  ctx.beginPath();
+  ctx.moveTo(lx - lh * 0.28, ly);
+  ctx.lineTo(lx - lh * 0.18, ly - lh * 0.7);
+  ctx.quadraticCurveTo(lx, ly - lh * 1.05, lx + lh * 0.18, ly - lh * 0.7);
+  ctx.lineTo(lx + lh * 0.28, ly);
+  ctx.closePath();
+  ctx.fill();
+  ctx.save();
+  ctx.shadowColor = "#7dff9a";
+  ctx.shadowBlur = lh * 0.1;
+  ctx.fillStyle = "#7dff9a";
+  ctx.fillRect(lx - lh * 0.09, ly - lh * 0.72, lh * 0.06, lh * 0.03);
+  ctx.fillRect(lx + lh * 0.03, ly - lh * 0.72, lh * 0.06, lh * 0.03);
+  ctx.restore();
+}
+
 /** Inside Prismo's portal: the Lich makes his wish. Pure function of state.cutsceneTime. */
 function drawCutscene(
   ctx: CanvasRenderingContext2D,
@@ -431,6 +472,7 @@ function drawCutscene(
   w: number,
   h: number,
   time: number,
+  assets?: Assets,
 ): void {
   const t = state.cutsceneTime;
   const total = Math.max(c.cutsceneSeconds, 0.001);
@@ -497,21 +539,9 @@ function drawCutscene(
   const lx = w * 0.26;
   const ly = h * 0.78;
   const lh = h * 0.42;
-  ctx.fillStyle = "#0c0814";
-  ctx.beginPath();
-  ctx.moveTo(lx - lh * 0.28, ly);
-  ctx.lineTo(lx - lh * 0.18, ly - lh * 0.7);
-  ctx.quadraticCurveTo(lx, ly - lh * 1.05, lx + lh * 0.18, ly - lh * 0.7);
-  ctx.lineTo(lx + lh * 0.28, ly);
-  ctx.closePath();
-  ctx.fill();
-  ctx.save();
-  ctx.shadowColor = "#7dff9a";
-  ctx.shadowBlur = lh * 0.1;
-  ctx.fillStyle = "#7dff9a";
-  ctx.fillRect(lx - lh * 0.09, ly - lh * 0.72, lh * 0.06, lh * 0.03);
-  ctx.fillRect(lx + lh * 0.03, ly - lh * 0.72, lh * 0.06, lh * 0.03);
-  ctx.restore();
+  if (!drawSprite(ctx, assets, "lich.wish", lx, ly, lh, "bottom", time)) {
+    drawLichShape(ctx, lx, ly, lh);
+  }
 
   // Dialogue: the wish types out, then holds.
   const typeStart = 1.2;
@@ -545,9 +575,10 @@ export function render(
   width: number,
   height: number,
   time: number,
+  assets?: Assets,
 ): void {
   if (state.phase === "cutscene") {
-    drawCutscene(ctx, state, c, width, height, time);
+    drawCutscene(ctx, state, c, width, height, time, assets);
     return;
   }
   drawBackdrop(ctx, width, height, time);
@@ -571,12 +602,12 @@ export function render(
   }
   items.sort((a, b) => b.rel - a.rel);
   for (const it of items) {
-    if (it.o) drawObstacle(ctx, it.o, it.rel, c, width, height);
-    else if (it.g) drawCrown(ctx, it.g, it.rel, time, c, width, height);
+    if (it.o) drawObstacle(ctx, it.o, it.rel, c, width, height, assets);
+    else if (it.g) drawCrown(ctx, it.g, it.rel, time, c, width, height, assets);
   }
 
-  drawPortal(ctx, state, c, width, height, time);
-  drawPlayer(ctx, state, c, width, height, time);
+  drawPortal(ctx, state, c, width, height, time, assets);
+  drawPlayer(ctx, state, c, width, height, time, assets);
 
   // HUD
   const fs = Math.max(14, height * 0.032);
