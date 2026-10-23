@@ -41,8 +41,8 @@ export interface Player {
   jumpHeight: number;
 }
 
-/** running: playing. dead: hit an obstacle, waiting for restart. portal: gem goal met, portal open ahead. */
-export type Phase = "running" | "dead" | "portal";
+/** running: playing. dead: hit an obstacle, waiting for restart. portal: gem goal met, portal open ahead. cutscene: inside the portal, the Lich makes his wish. */
+export type Phase = "running" | "dead" | "portal" | "cutscene";
 
 export interface GameState {
   phase: Phase;
@@ -57,6 +57,8 @@ export interface GameState {
   collectibles: Gem[];
   /** World z of the Prismo portal, or null until the gem goal is met. */
   portalZ: number | null;
+  /** Seconds elapsed in the Prismo cutscene. Only advances while phase is "cutscene". */
+  cutsceneTime: number;
   player: Player;
   /** Highest tier reached in this session, for display. */
   bestTier: number;

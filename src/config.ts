@@ -21,6 +21,8 @@ export interface GameConfig {
   viewDistance: number;
   /** Distance past the final gem at which the portal appears. */
   portalLead: number;
+  /** Length of the Prismo wish cutscene. */
+  cutsceneSeconds: number;
 }
 
 export const defaultConfig: GameConfig = {
@@ -36,6 +38,7 @@ export const defaultConfig: GameConfig = {
   slideSeconds: 0.5,
   viewDistance: 120,
   portalLead: 40,
+  cutsceneSeconds: 6,
 };
 
 export const config: GameConfig = { ...defaultConfig };

@@ -30,6 +30,7 @@ export function createState(c: GameConfig, tier = 1, bestTier = 1): GameState {
     obstacles: [],
     collectibles: [],
     portalZ: null,
+    cutsceneTime: 0,
     player: { lane: 1, laneX: 1, pose: "run", poseTimeLeft: 0, jumpHeight: 0 },
     bestTier: Math.max(bestTier, tier),
     nextId: 1,
@@ -86,7 +87,29 @@ function applyAction(state: GameState, a: InputAction, c: GameConfig): void {
   }
 }
 
+/** Skipping the cutscene is allowed once this many seconds have played. */
+const CUTSCENE_SKIP_AFTER = 1;
+
+function advanceTier(state: GameState, c: GameConfig): void {
+  state.tier++;
+  state.bestTier = Math.max(state.bestTier, state.tier);
+  state.gems = 0;
+  state.portalZ = null;
+  state.cutsceneTime = 0;
+  state.phase = "running";
+  state.obstacles = [];
+  state.collectibles = [];
+  state.spawnedUntil = state.distance + START_GRACE;
+  state.speed = tierSpeed(c, state.tier);
+}
+
 export function update(state: GameState, dt: number, actions: InputAction[], c: GameConfig): void {
+  if (state.phase === "cutscene") {
+    state.cutsceneTime += Math.min(Math.max(dt, 0), MAX_DT);
+    const skip = actions.includes("start") && state.cutsceneTime >= CUTSCENE_SKIP_AFTER;
+    if (skip || state.cutsceneTime >= c.cutsceneSeconds) advanceTier(state, c);
+    return;
+  }
   if (state.phase === "dead") {
     if (actions.includes("start")) {
       Object.assign(state, createState(c, 1, state.bestTier));
@@ -155,15 +178,12 @@ export function update(state: GameState, dt: number, actions: InputAction[], c: 
     state.spawnedUntil = Math.min(state.spawnedUntil, pz);
   }
   if (state.portalZ !== null && now >= state.portalZ) {
-    state.tier++;
-    state.bestTier = Math.max(state.bestTier, state.tier);
-    state.gems = 0;
-    state.portalZ = null;
-    state.phase = "running";
+    // Through the portal: the tier advances when the cutscene ends.
+    state.phase = "cutscene";
+    state.cutsceneTime = 0;
     state.obstacles = [];
     state.collectibles = [];
-    state.spawnedUntil = now + START_GRACE;
-    state.speed = tierSpeed(c, state.tier);
+    return;
   }
   spawn(state, c);
 }

@@ -11,6 +11,7 @@ export interface DebugField {
 export const DEBUG_FIELDS: readonly DebugField[] = [
   { key: "startSpeed", label: "start speed", min: 10, max: 120, step: 1 },
   { key: "speedPerTier", label: "speed / tier", min: 0, max: 30, step: 0.5 },
+  { key: "cutsceneSeconds", label: "cutscene seconds", min: 1, max: 15, step: 0.5 },
   { key: "gemGoal", label: "gem goal", min: 1, max: 50, step: 1 },
   { key: "obstacleDensity", label: "obstacle density", min: 0, max: 20, step: 0.1 },
   { key: "densityPerTier", label: "density / tier", min: 0, max: 5, step: 0.1 },

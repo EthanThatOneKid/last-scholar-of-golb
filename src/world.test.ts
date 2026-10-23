@@ -105,7 +105,7 @@ describe("world", () => {
       // Keep alive for the soak: cheat by pushing obstacles away is not needed; just revive.
       if (dead) s.phase = "running";
       update(s, DT, [], c);
-      s.phase = "running";
+      if ((s.phase as string) === "dead") s.phase = "running";
       const byZ = new Map<number, Set<number>>();
       for (const o of s.obstacles) {
         const k = Math.round(o.z);
@@ -132,7 +132,7 @@ describe("world", () => {
     runFor(s, 0.5);
     expect(s.portalZ).not.toBeNull();
     expect(s.phase).toBe("portal");
-    for (let i = 0; i < 600 && s.tier === 1; i++) update(s, DT, [], c);
+    for (let i = 0; i < 1200 && s.tier === 1; i++) update(s, DT, [], c);
     expect(s.tier).toBe(2);
     expect(s.bestTier).toBe(2);
     expect(s.gems).toBe(0);
@@ -164,5 +164,49 @@ describe("world", () => {
     expect(s.tier).toBe(1);
     expect(s.bestTier).toBe(3);
     expect(s.distance).toBe(0);
+  });
+
+  describe("Prismo cutscene", () => {
+    function atPortal(): GameState {
+      const s = empty();
+      s.gems = c.gemGoal;
+      s.portalZ = 20;
+      s.phase = "portal";
+      for (let i = 0; i < 600 && (s.phase as string) !== "cutscene"; i++) update(s, DT, [], c);
+      return s;
+    }
+
+    it("reaching the portal starts the cutscene without advancing the tier yet", () => {
+      const s = atPortal();
+      expect(s.phase).toBe("cutscene");
+      expect(s.tier).toBe(1);
+    });
+
+    it("ignores obstacles and movement while it plays", () => {
+      const s = atPortal();
+      const d = s.distance;
+      update(s, 0.1, ["left", "jump"], c);
+      expect(s.phase).toBe("cutscene");
+      expect(s.distance).toBe(d);
+    });
+
+    it("ends after cutsceneSeconds and starts the next tier", () => {
+      const s = atPortal();
+      for (let i = 0; i < 1200 && (s.phase as string) === "cutscene"; i++) update(s, DT, [], c);
+      expect(s.phase).toBe("running");
+      expect(s.tier).toBe(2);
+      expect(s.gems).toBe(0);
+      expect(s.portalZ).toBeNull();
+    });
+
+    it("can be skipped with start, but not instantly", () => {
+      const s = atPortal();
+      update(s, 0.1, ["start"], c);
+      expect(s.phase).toBe("cutscene");
+      runFor(s, 1);
+      update(s, 0.05, ["start"], c);
+      expect(s.phase).toBe("running");
+      expect(s.tier).toBe(2);
+    });
   });
 });

@@ -409,6 +409,128 @@ function centered(
   ctx.fillText(text, x, y);
 }
 
+const WISH = "I wish for the end of all life.";
+
+function smooth(t: number): number {
+  const x = Math.min(1, Math.max(0, t));
+  return x * x * (3 - 2 * x);
+}
+
+/** Inside Prismo's portal: the Lich makes his wish. Pure function of state.cutsceneTime. */
+function drawCutscene(
+  ctx: CanvasRenderingContext2D,
+  state: GameState,
+  c: GameConfig,
+  w: number,
+  h: number,
+  time: number,
+): void {
+  const t = state.cutsceneTime;
+  const total = Math.max(c.cutsceneSeconds, 0.001);
+  const fs = Math.max(14, Math.min(w, h) * 0.04);
+
+  // Cosmic chamber.
+  const bg = ctx.createRadialGradient(w / 2, h * 0.45, h * 0.05, w / 2, h * 0.45, h * 0.9);
+  bg.addColorStop(0, "#3b1c6e");
+  bg.addColorStop(1, "#07030f");
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, w, h);
+  for (let i = 0; i < 60; i++) {
+    const sx = ((Math.sin(i * 91.7) * 0.5 + 0.5) * w) | 0;
+    const sy = ((Math.sin(i * 47.3 + 1) * 0.5 + 0.5) * h) | 0;
+    ctx.globalAlpha = 0.35 + 0.65 * Math.abs(Math.sin(time * 1.5 + i));
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(sx, sy, 2, 2);
+  }
+  ctx.globalAlpha = 1;
+
+  // Prismo: a floating placeholder orb.
+  const px = w * 0.72;
+  const py = h * 0.36 + Math.sin(time * 1.6) * h * 0.012;
+  const pr = h * 0.11;
+  ctx.save();
+  ctx.shadowColor = "#b78cff";
+  ctx.shadowBlur = pr * 0.8;
+  ctx.fillStyle = "#c9a8ff";
+  ctx.beginPath();
+  ctx.arc(px, py, pr, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+  ctx.fillStyle = "#2a1450";
+  ctx.beginPath();
+  ctx.arc(px - pr * 0.35, py - pr * 0.1, pr * 0.1, 0, Math.PI * 2);
+  ctx.arc(px + pr * 0.35, py - pr * 0.1, pr * 0.1, 0, Math.PI * 2);
+  ctx.fill();
+
+  // The Enchiridion, nine gems glowing brighter as the wish nears.
+  const ex = w * 0.5;
+  const ey = h * 0.5 + Math.sin(time * 1.2) * h * 0.01;
+  const ew = h * 0.2;
+  const eh = h * 0.26;
+  const glow = smooth((t - 1) / 2);
+  ctx.save();
+  ctx.shadowColor = "#7dff9a";
+  ctx.shadowBlur = h * 0.06 * glow;
+  ctx.fillStyle = "#3a2a1a";
+  ctx.fillRect(ex - ew / 2, ey - eh / 2, ew, eh);
+  ctx.restore();
+  ctx.strokeStyle = "#c8a45a";
+  ctx.lineWidth = Math.max(2, h * 0.005);
+  ctx.strokeRect(ex - ew / 2, ey - eh / 2, ew, eh);
+  for (let i = 0; i < 9; i++) {
+    const gx = ex + ((i % 3) - 1) * ew * 0.28;
+    const gy = ey + (Math.floor(i / 3) - 1) * eh * 0.26;
+    ctx.fillStyle = `rgba(125,255,154,${0.35 + 0.65 * glow})`;
+    ctx.beginPath();
+    ctx.arc(gx, gy, h * 0.012, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // The Lich: a dark hooded placeholder with glowing eyes.
+  const lx = w * 0.26;
+  const ly = h * 0.78;
+  const lh = h * 0.42;
+  ctx.fillStyle = "#0c0814";
+  ctx.beginPath();
+  ctx.moveTo(lx - lh * 0.28, ly);
+  ctx.lineTo(lx - lh * 0.18, ly - lh * 0.7);
+  ctx.quadraticCurveTo(lx, ly - lh * 1.05, lx + lh * 0.18, ly - lh * 0.7);
+  ctx.lineTo(lx + lh * 0.28, ly);
+  ctx.closePath();
+  ctx.fill();
+  ctx.save();
+  ctx.shadowColor = "#7dff9a";
+  ctx.shadowBlur = lh * 0.1;
+  ctx.fillStyle = "#7dff9a";
+  ctx.fillRect(lx - lh * 0.09, ly - lh * 0.72, lh * 0.06, lh * 0.03);
+  ctx.fillRect(lx + lh * 0.03, ly - lh * 0.72, lh * 0.06, lh * 0.03);
+  ctx.restore();
+
+  // Dialogue: the wish types out, then holds.
+  const typeStart = 1.2;
+  const typeEnd = Math.max(typeStart + 0.5, total * 0.6);
+  const n = Math.floor(WISH.length * smooth((t - typeStart) / (typeEnd - typeStart)));
+  if (n > 0) {
+    ctx.globalAlpha = 1;
+    centered(ctx, "THE LICH", w / 2, h * 0.84, fs * 0.8, "#7dff9a");
+    centered(ctx, WISH.slice(0, n), w / 2, h * 0.84 + fs * 1.6, fs * 1.3, "#ffffff");
+  }
+  if (t >= 1) {
+    ctx.globalAlpha = 0.6;
+    centered(ctx, "Space to skip", w - fs * 4, h - fs * 0.8, fs * 0.6, "#e0ccff");
+    ctx.globalAlpha = 1;
+  }
+
+  // Flash in from the portal, and out to the next tier.
+  const flashIn = 1 - smooth(t / 0.8);
+  const flashOut = smooth((t - (total - 0.8)) / 0.8);
+  const flash = Math.max(flashIn, flashOut);
+  if (flash > 0) {
+    ctx.fillStyle = `rgba(255,255,255,${flash})`;
+    ctx.fillRect(0, 0, w, h);
+  }
+}
+
 export function render(
   ctx: CanvasRenderingContext2D,
   state: GameState,
@@ -417,6 +539,10 @@ export function render(
   height: number,
   time: number,
 ): void {
+  if (state.phase === "cutscene") {
+    drawCutscene(ctx, state, c, width, height, time);
+    return;
+  }
   drawBackdrop(ctx, width, height, time);
   drawRoad(ctx, state, c, width, height);
   drawScenery(ctx, state, c, width, height);

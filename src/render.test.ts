@@ -78,6 +78,7 @@ function state(phase: GameState["phase"]): GameState {
     ],
     collectibles: [{ id: 4, kind: "bubblegum-tiara", value: 1, lane: 1, z: 160 }],
     portalZ: phase === "portal" ? 200 : null,
+    cutsceneTime: phase === "cutscene" ? 2.5 : 0,
     player: { lane: 1, laneX: 1, pose: "slide", poseTimeLeft: 0.2, jumpHeight: 0.4 },
     bestTier: 3,
     nextId: 5,
@@ -88,11 +89,18 @@ function state(phase: GameState["phase"]): GameState {
 
 describe("render", () => {
   it("draws every phase without throwing or mutating state", () => {
-    for (const phase of ["running", "dead", "portal"] as const) {
+    for (const phase of ["running", "dead", "portal", "cutscene"] as const) {
       const s = state(phase);
       const before = JSON.stringify(s);
       expect(() => render(fakeCtx(), s, c, W, H, 1.5)).not.toThrow();
       expect(JSON.stringify(s)).toBe(before);
+    }
+  });
+
+  it("draws the cutscene at every moment without throwing", () => {
+    for (const cutsceneTime of [0, 0.4, 1, 2, 3.5, 5.5, c.cutsceneSeconds]) {
+      const s = { ...state("cutscene"), cutsceneTime };
+      expect(() => render(fakeCtx(), s, c, W, H, 1.5)).not.toThrow();
     }
   });
 });

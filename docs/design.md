@@ -17,6 +17,10 @@ through the Land of Ooo to end all life.
 - Collect crowns, each worth gems: tiaras are 1, the Ice King's Crown is 3. Nine gems (the Enchiridion) open the portal to Prismo. Crowns are rare.
 - Each tier keeps the same gem goal but raises speed and obstacle density.
 - Tier reached is the score.
+- Entering the portal plays a short cutscene (about 6 seconds, skippable with
+  Space or Enter after 1 second): Prismo's chamber, the Enchiridion glowing with
+  its nine gems, and the Lich wishing for the end of all life. It flashes back
+  into the run at the next tier. The wish wording is placeholder, not a quote.
 
 ## Deferred
 
