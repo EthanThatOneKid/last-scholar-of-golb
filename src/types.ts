@@ -16,8 +16,15 @@ export interface Obstacle {
   z: number;
 }
 
+/** bubblegum-tiara: one blue gem. ice-king-crown: three red rubies. */
+export type CrownKind = "bubblegum-tiara" | "ice-king-crown";
+
+/** Crown pickup. Collecting one adds `value` gems toward the Enchiridion. */
 export interface Gem {
   id: number;
+  kind: CrownKind;
+  /** Gems this crown is worth: 1 for a tiara, 3 for the Ice King's Crown. */
+  value: number;
   lane: Lane;
   z: number;
 }

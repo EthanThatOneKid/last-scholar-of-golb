@@ -1,6 +1,6 @@
 // Canvas 2D pseudo-3D renderer. Pure drawing: never mutates game state.
 import type { GameConfig } from "./config";
-import type { GameState, Obstacle } from "./types";
+import type { GameState, Gem, Obstacle } from "./types";
 
 export interface Projection {
   x: number;
@@ -253,42 +253,62 @@ function drawObstacle(
   }
 }
 
-function drawGem(
+function drawCrown(
   ctx: CanvasRenderingContext2D,
-  lane: number,
+  g: Gem,
   rel: number,
-  id: number,
   time: number,
   c: GameConfig,
   w: number,
   h: number,
 ): void {
-  const p = project(rel, lane, c, w, h);
-  const u = p.scale * h * 0.01;
-  const bob = Math.sin(time * 3 + id) * 1.2 * u;
+  const p = project(rel, g.lane, c, w, h);
+  const ice = g.kind === "ice-king-crown";
+  const u = p.scale * h * 0.01 * (ice ? 1.3 : 1);
+  const bob = Math.sin(time * 3 + g.id) * 1.2 * u;
   const cy = p.y - 5 * u + bob;
-  const spin = Math.abs(Math.cos(time * 2.5 + id));
-  const rw = Math.max(1.5, 2.8 * u * (0.35 + 0.65 * spin));
-  const rh = Math.max(2, 3.6 * u);
+  const hw = 3.2 * u;
+  const hh = 2.4 * u;
+  const base = cy + hh * 0.6;
   ctx.save();
-  ctx.shadowColor = "#7df9ff";
+  ctx.shadowColor = ice ? "#ff4d6d" : "#7df9ff";
   ctx.shadowBlur = 12 * p.scale + 2;
-  ctx.fillStyle = "#7df9ff";
+  ctx.fillStyle = ice ? "#e8e4ff" : "#ffd6f0";
+  ctx.strokeStyle = "rgba(0,0,0,0.35)";
+  ctx.lineWidth = Math.max(1, u * 0.25);
   ctx.beginPath();
-  ctx.moveTo(p.x, cy - rh);
-  ctx.lineTo(p.x + rw, cy);
-  ctx.lineTo(p.x, cy + rh);
-  ctx.lineTo(p.x - rw, cy);
+  ctx.moveTo(p.x - hw, base);
+  if (ice) {
+    // three-pointed crown
+    ctx.lineTo(p.x - hw, cy - hh * 0.4);
+    ctx.lineTo(p.x - hw * 0.5, cy + hh * 0.1);
+    ctx.lineTo(p.x, cy - hh);
+    ctx.lineTo(p.x + hw * 0.5, cy + hh * 0.1);
+    ctx.lineTo(p.x + hw, cy - hh * 0.4);
+  } else {
+    // tiara with a centre peak
+    ctx.lineTo(p.x - hw, cy);
+    ctx.lineTo(p.x - hw * 0.45, cy + hh * 0.2);
+    ctx.lineTo(p.x, cy - hh * 0.8);
+    ctx.lineTo(p.x + hw * 0.45, cy + hh * 0.2);
+    ctx.lineTo(p.x + hw, cy);
+  }
+  ctx.lineTo(p.x + hw, base);
   ctx.closePath();
   ctx.fill();
+  ctx.stroke();
   ctx.restore();
-  ctx.fillStyle = "rgba(255,255,255,0.7)";
-  ctx.beginPath();
-  ctx.moveTo(p.x, cy - rh);
-  ctx.lineTo(p.x + rw * 0.5, cy);
-  ctx.lineTo(p.x, cy);
-  ctx.closePath();
-  ctx.fill();
+  // gems: three rubies for the Ice King's Crown, one blue gem for a tiara
+  const gemR = Math.max(1, u * (ice ? 0.75 : 1.0));
+  const gems: [number, string][] = ice
+    ? [[-hw * 0.55, "#ff2d55"], [0, "#ff2d55"], [hw * 0.55, "#ff2d55"]]
+    : [[0, "#3aa0ff"]];
+  for (const [dx, color] of gems) {
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(p.x + dx, base - hh * 0.55, gemR, 0, Math.PI * 2);
+    ctx.fill();
+  }
 }
 
 function drawPortal(
@@ -405,7 +425,7 @@ export function render(
   const obs = state.obstacles;
   const gems = state.collectibles;
   const vd = c.viewDistance;
-  const items: Array<{ rel: number; o?: Obstacle; g?: { lane: number; id: number } }> = [];
+  const items: Array<{ rel: number; o?: Obstacle; g?: Gem }> = [];
   for (let i = 0; i < obs.length; i++) {
     const rel = obs[i].z - state.distance;
     if (rel < -2 || rel > vd) continue;
@@ -419,7 +439,7 @@ export function render(
   items.sort((a, b) => b.rel - a.rel);
   for (const it of items) {
     if (it.o) drawObstacle(ctx, it.o, it.rel, c, width, height);
-    else if (it.g) drawGem(ctx, it.g.lane, it.rel, it.g.id, time, c, width, height);
+    else if (it.g) drawCrown(ctx, it.g, it.rel, time, c, width, height);
   }
 
   drawPortal(ctx, state, c, width, height, time);

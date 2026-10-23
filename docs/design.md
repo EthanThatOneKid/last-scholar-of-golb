@@ -14,7 +14,7 @@ through the Land of Ooo to end all life.
 - Camera: 2.5D pseudo-3D. Canvas/WebGL sprites scaled along a road.
 - Swap lanes (and later jump/slide) to avoid obstacles.
 - One hit and you're dead. Death resets to tier 1. Nothing carries over.
-- Collect gems. A fixed gem count opens the portal to Prismo.
+- Collect crowns, each worth gems: tiaras are 1, the Ice King's Crown is 3. Nine gems (the Enchiridion) open the portal to Prismo. Crowns are rare.
 - Each tier keeps the same gem goal but raises speed and obstacle density.
 - Tier reached is the score.
 

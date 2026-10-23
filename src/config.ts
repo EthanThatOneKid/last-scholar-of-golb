@@ -4,14 +4,16 @@ export interface GameConfig {
   startSpeed: number;
   /** Added to speed for each tier above 1. */
   speedPerTier: number;
-  /** Gems needed to open the portal. Same every tier. */
+  /** Gems (not crowns) needed to open the portal. Same every tier. */
   gemGoal: number;
   /** Expected obstacles per 100 world units at tier 1. */
   obstacleDensity: number;
   /** Added to obstacle density for each tier above 1. */
   densityPerTier: number;
-  /** Expected gems per 100 world units. */
+  /** Expected crowns per 100 world units. */
   gemDensity: number;
+  /** Chance in [0, 1] that a crown is the Ice King's Crown (3 gems) instead of a tiara (1). */
+  iceCrownChance: number;
   laneChangeSeconds: number;
   jumpSeconds: number;
   slideSeconds: number;
@@ -24,10 +26,11 @@ export interface GameConfig {
 export const defaultConfig: GameConfig = {
   startSpeed: 30,
   speedPerTier: 6,
-  gemGoal: 10,
+  gemGoal: 9, // the Enchiridion takes nine gems to summon Prismo
   obstacleDensity: 6,
   densityPerTier: 1,
-  gemDensity: 8,
+  gemDensity: 1.5,
+  iceCrownChance: 0.2,
   laneChangeSeconds: 0.12,
   jumpSeconds: 0.6,
   slideSeconds: 0.5,

@@ -76,7 +76,7 @@ function state(phase: GameState["phase"]): GameState {
       { id: 2, kind: "candy-cane", lane: 1, z: 180 },
       { id: 3, kind: "licorice-arch", lane: 2, z: 124 },
     ],
-    collectibles: [{ id: 4, lane: 1, z: 160 }],
+    collectibles: [{ id: 4, kind: "bubblegum-tiara", value: 1, lane: 1, z: 160 }],
     portalZ: phase === "portal" ? 200 : null,
     player: { lane: 1, laneX: 1, pose: "slide", poseTimeLeft: 0.2, jumpHeight: 0.4 },
     bestTier: 3,

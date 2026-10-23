@@ -79,10 +79,21 @@ describe("world", () => {
 
   it("picks up gems", () => {
     const s = empty();
-    s.collectibles.push({ id: 1, lane: 1, z: 15 });
+    s.collectibles.push({ id: 1, kind: "bubblegum-tiara", value: 1, lane: 1, z: 15 });
     runFor(s, 1);
     expect(s.gems).toBe(1);
     expect(s.collectibles).toHaveLength(0);
+  });
+
+  it("an Ice King's Crown is worth three gems", () => {
+    const s = empty();
+    s.collectibles.push({ id: 1, kind: "ice-king-crown", value: 3, lane: 1, z: 15 });
+    runFor(s, 1);
+    expect(s.gems).toBe(3);
+  });
+
+  it("the default goal is nine gems", () => {
+    expect(defaultConfig.gemGoal).toBe(9);
   });
 
   it("never blocks a whole slice and gems avoid obstacles", () => {
@@ -117,7 +128,7 @@ describe("world", () => {
     const s = empty();
     const speed1 = s.speed;
     s.gems = c.gemGoal - 1;
-    s.collectibles.push({ id: 1, lane: 1, z: 5 });
+    s.collectibles.push({ id: 1, kind: "bubblegum-tiara", value: 1, lane: 1, z: 5 });
     runFor(s, 0.5);
     expect(s.portalZ).not.toBeNull();
     expect(s.phase).toBe("portal");

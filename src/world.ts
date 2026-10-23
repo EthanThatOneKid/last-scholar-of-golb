@@ -59,7 +59,14 @@ function spawn(state: GameState, c: GameConfig): void {
       const lane = randLane(state);
       const z = start + rand(state) * SLICE;
       if (!(lane === obstacleLane && Math.abs(z - obstacleZ) < 2)) {
-        state.collectibles.push({ id: state.nextId++, lane, z });
+        const ice = rand(state) < c.iceCrownChance;
+        state.collectibles.push({
+          id: state.nextId++,
+          kind: ice ? "ice-king-crown" : "bubblegum-tiara",
+          value: ice ? 3 : 1,
+          lane,
+          z,
+        });
       }
     }
     state.spawnedUntil = start + SLICE;
@@ -129,7 +136,7 @@ export function update(state: GameState, dt: number, actions: InputAction[], c: 
   }
   const kept = [];
   for (const g of state.collectibles) {
-    if (g.lane === laneNow && g.z >= prev - 1 && g.z <= now + 1) state.gems++;
+    if (g.lane === laneNow && g.z >= prev - 1 && g.z <= now + 1) state.gems += g.value;
     else kept.push(g);
   }
   state.collectibles = kept;
