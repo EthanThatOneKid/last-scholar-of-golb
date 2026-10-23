@@ -87,3 +87,70 @@ describe("assetUrl", () => {
     expect(assetUrl("/assets/a.png")).not.toContain("//assets");
   });
 });
+
+describe("sprite sheets", () => {
+  const sheetSprite = () => sprite(80, 20); // 4 frames of 20x20
+
+  it("loads sheets alongside plain images and counts them in progress", async () => {
+    const progress: [number, number][] = [];
+    const assets = await loadImages(
+      { plain: "/plain.png" },
+      {
+        sheets: { anim: { src: "/anim.png", frames: 4, fps: 8 } },
+        loadImage: async (url) => (url.includes("anim") ? sheetSprite() : sprite(4, 4)),
+        onProgress: (d, t) => progress.push([d, t]),
+      },
+    );
+    expect(assets.image("plain")).toBeDefined();
+    expect(assets.sheet?.("anim")).toMatchObject({ frames: 4, fps: 8 });
+    expect(assets.image("anim")).toBeUndefined();
+    expect(progress.at(-1)).toEqual([2, 2]);
+  });
+
+  it("rejects a sheet with a bad frame count or fps as missing", async () => {
+    const assets = await loadImages(
+      {},
+      {
+        sheets: {
+          zero: { src: "/a.png", frames: 0, fps: 8 },
+          still: { src: "/b.png", frames: 4, fps: 0 },
+        },
+        loadImage: async () => sheetSprite(),
+      },
+    );
+    expect(assets.sheet?.("zero")).toBeUndefined();
+    expect(assets.sheet?.("still")).toBeUndefined();
+    expect([...assets.missing].sort()).toEqual(["still", "zero"]);
+  });
+
+  async function drawAt(time: number) {
+    const calls: unknown[][] = [];
+    const ctx = fakeCtx({ drawImage: (...a) => calls.push(a) });
+    const assets = await loadImages(
+      {},
+      {
+        sheets: { anim: { src: "/anim.png", frames: 4, fps: 10 } },
+        loadImage: async () => sheetSprite(),
+      },
+    );
+    const ok = drawSprite(ctx, assets, "anim", 100, 200, 40, "bottom", time);
+    return { ok, call: calls[0]?.slice(1) };
+  }
+
+  it("draws the frame for the time, keeping the frame's aspect ratio", async () => {
+    // frame 0 of an 80x20 sheet is 20x20, drawn 40 tall -> 40 wide, centered on x=100
+    expect(await drawAt(0)).toEqual({ ok: true, call: [0, 0, 20, 20, 80, 160, 40, 40] });
+    expect((await drawAt(0.1)).call?.[0]).toBe(20); // 10 fps: frame 1
+    expect((await drawAt(0.35)).call?.[0]).toBe(60); // frame 3
+  });
+
+  it("loops back to the first frame", async () => {
+    expect((await drawAt(0.4)).call?.[0]).toBe(0);
+    expect((await drawAt(1.35)).call?.[0]).toBe(20); // 13 % 4 = frame 1
+  });
+
+  it("treats negative time as the first frame", async () => {
+    expect((await drawAt(-3)).call?.[0]).toBe(0);
+  });
+});
+

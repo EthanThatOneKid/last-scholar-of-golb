@@ -44,14 +44,17 @@ let assets: Assets = noAssets;
 // the built-in shapes (images) or stay silent (audio).
 const progress: LoadProgress = {
   done: 0,
-  total: Object.keys(manifest.images).length + Object.keys(manifest.audio).length,
+  total:
+    Object.keys(manifest.images).length +
+    Object.keys(manifest.sheets).length +
+    Object.keys(manifest.audio).length,
   ready: false,
 };
 const bump = (): void => {
   progress.done++;
 };
 void Promise.all([
-  loadImages(manifest.images, { onProgress: bump }).then((a) => {
+  loadImages(manifest.images, { sheets: manifest.sheets, onProgress: bump }).then((a) => {
     assets = a;
   }),
   ...Object.entries(manifest.audio).map(([name, url]) => audio.load(name, url).then(bump)),

@@ -381,11 +381,16 @@ function drawPlayer(
   const stride = s.phase === "dead" ? 0 : Math.sin(time * 14) * 0.6 * u;
   const gy = p.y - lift;
   const spriteH = (slide ? 7 : 17) * u;
-  if (
-    drawSprite(ctx, assets, `lich.${pl.pose}`, p.x, gy, spriteH) ||
-    drawSprite(ctx, assets, "lich", p.x, gy, spriteH)
-  ) {
-    return;
+  // Most specific first. The idle loop stands in for run and jump, but not for slide: it is far too
+  // tall to pass under the licorice arch.
+  const names = [
+    ...(s.phase === "dead" ? ["lich.dead"] : []),
+    `lich.${pl.pose}`,
+    ...(slide ? [] : ["lich.idle"]),
+    "lich",
+  ];
+  for (const name of names) {
+    if (drawSprite(ctx, assets, name, p.x, gy, spriteH, "bottom", time)) return;
   }
   // shadow
   ctx.fillStyle = "rgba(40,10,60,0.35)";
@@ -439,6 +444,25 @@ function smooth(t: number): number {
   return x * x * (3 - 2 * x);
 }
 
+/** Placeholder Lich for the cutscene: a dark hooded figure with glowing eyes. */
+function drawLichShape(ctx: CanvasRenderingContext2D, lx: number, ly: number, lh: number): void {
+  ctx.fillStyle = "#0c0814";
+  ctx.beginPath();
+  ctx.moveTo(lx - lh * 0.28, ly);
+  ctx.lineTo(lx - lh * 0.18, ly - lh * 0.7);
+  ctx.quadraticCurveTo(lx, ly - lh * 1.05, lx + lh * 0.18, ly - lh * 0.7);
+  ctx.lineTo(lx + lh * 0.28, ly);
+  ctx.closePath();
+  ctx.fill();
+  ctx.save();
+  ctx.shadowColor = "#7dff9a";
+  ctx.shadowBlur = lh * 0.1;
+  ctx.fillStyle = "#7dff9a";
+  ctx.fillRect(lx - lh * 0.09, ly - lh * 0.72, lh * 0.06, lh * 0.03);
+  ctx.fillRect(lx + lh * 0.03, ly - lh * 0.72, lh * 0.06, lh * 0.03);
+  ctx.restore();
+}
+
 /** Inside Prismo's portal: the Lich makes his wish. Pure function of state.cutsceneTime. */
 function drawCutscene(
   ctx: CanvasRenderingContext2D,
@@ -447,6 +471,7 @@ function drawCutscene(
   w: number,
   h: number,
   time: number,
+  assets?: Assets,
 ): void {
   const t = state.cutsceneTime;
   const total = Math.max(c.cutsceneSeconds, 0.001);
@@ -513,21 +538,9 @@ function drawCutscene(
   const lx = w * 0.26;
   const ly = h * 0.78;
   const lh = h * 0.42;
-  ctx.fillStyle = "#0c0814";
-  ctx.beginPath();
-  ctx.moveTo(lx - lh * 0.28, ly);
-  ctx.lineTo(lx - lh * 0.18, ly - lh * 0.7);
-  ctx.quadraticCurveTo(lx, ly - lh * 1.05, lx + lh * 0.18, ly - lh * 0.7);
-  ctx.lineTo(lx + lh * 0.28, ly);
-  ctx.closePath();
-  ctx.fill();
-  ctx.save();
-  ctx.shadowColor = "#7dff9a";
-  ctx.shadowBlur = lh * 0.1;
-  ctx.fillStyle = "#7dff9a";
-  ctx.fillRect(lx - lh * 0.09, ly - lh * 0.72, lh * 0.06, lh * 0.03);
-  ctx.fillRect(lx + lh * 0.03, ly - lh * 0.72, lh * 0.06, lh * 0.03);
-  ctx.restore();
+  if (!drawSprite(ctx, assets, "lich.wish", lx, ly, lh, "bottom", time)) {
+    drawLichShape(ctx, lx, ly, lh);
+  }
 
   // Dialogue: the wish types out, then holds.
   const typeStart = 1.2;
@@ -564,7 +577,7 @@ export function render(
   assets?: Assets,
 ): void {
   if (state.phase === "cutscene") {
-    drawCutscene(ctx, state, c, width, height, time);
+    drawCutscene(ctx, state, c, width, height, time, assets);
     return;
   }
   drawBackdrop(ctx, width, height, time);
