@@ -9,3 +9,12 @@ npm install
 npm run dev     # start the dev server
 npm run build   # typecheck and build to dist/
 ```
+
+## Controls
+
+A/D or arrows change lanes, W/Up/Space jump, S/Down slide, P or Esc pause, M mute. Backtick opens
+the debug panel.
+
+## Art and audio
+
+See [`docs/assets.md`](docs/assets.md) for sprite names, the asset rules and the credits table.

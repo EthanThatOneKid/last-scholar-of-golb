@@ -17,6 +17,11 @@ describe("key mapping", () => {
     ["s", ["slide"]],
     ["S", ["slide"]],
     ["Enter", ["start"]],
+    ["p", ["pause"]],
+    ["P", ["pause"]],
+    ["Escape", ["pause"]],
+    ["m", ["mute"]],
+    ["M", ["mute"]],
     ["x", []],
     ["toString", []],
   ];

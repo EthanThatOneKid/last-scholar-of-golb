@@ -1,6 +1,8 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { defaultConfig } from "./config";
+import type { Sprite } from "./assets";
 import { project, render } from "./render";
+import { fakeCtx } from "./test-ctx";
 import type { GameState } from "./types";
 
 const c = defaultConfig;
@@ -46,22 +48,6 @@ describe("project", () => {
     }
   });
 });
-
-function fakeCtx(): CanvasRenderingContext2D {
-  const grad = { addColorStop: vi.fn() };
-  const target: Record<string | symbol, unknown> = {};
-  return new Proxy(target, {
-    get(t, key) {
-      if (key === "createLinearGradient" || key === "createRadialGradient") return () => grad;
-      if (key in t) return t[key];
-      return () => {};
-    },
-    set(t, key, value) {
-      t[key] = value;
-      return true;
-    },
-  }) as unknown as CanvasRenderingContext2D;
-}
 
 function state(phase: GameState["phase"]): GameState {
   return {
@@ -109,5 +95,52 @@ describe("render", () => {
     for (const viewDistance of [60, 120, 300]) {
       expect(project(-1000, 1, { ...c, viewDistance }, W, H).y).toBeGreaterThan(H);
     }
+  });
+
+  describe("sprites", () => {
+    const sprite = (): Sprite => ({ width: 10, height: 20 }) as unknown as Sprite;
+    const withSprites = (names: string[]) => ({
+      image: (n: string) => (names.includes(n) ? sprite() : undefined),
+      missing: [],
+    });
+
+    it("draws loaded sprites instead of shapes", () => {
+      const drawn: string[] = [];
+      const ctx = fakeCtx({ drawImage: () => drawn.push("img") });
+      const s = { ...state("portal"), portalZ: 150 };
+      render(
+        ctx,
+        s,
+        c,
+        W,
+        H,
+        1,
+        withSprites([
+          "obstacle.gumdrop",
+          "obstacle.candy-cane",
+          "obstacle.licorice-arch",
+          "crown.bubblegum-tiara",
+          "portal",
+          "lich.slide",
+        ]),
+      );
+      // 3 obstacles + 1 crown + portal + lich
+      expect(drawn).toHaveLength(6);
+    });
+
+    it("falls back to shapes when no assets, or when a sprite is missing", () => {
+      let images = 0;
+      const ctx = fakeCtx({ drawImage: () => images++ });
+      render(ctx, state("running"), c, W, H, 1);
+      render(ctx, state("running"), c, W, H, 1, withSprites([]));
+      expect(images).toBe(0);
+    });
+
+    it("falls back to the plain lich sprite when the pose sprite is missing", () => {
+      let images = 0;
+      const ctx = fakeCtx({ drawImage: () => images++ });
+      render(ctx, state("running"), c, W, H, 1, withSprites(["lich"]));
+      expect(images).toBe(1);
+    });
   });
 });

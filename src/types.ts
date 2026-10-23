@@ -70,4 +70,4 @@ export interface GameState {
   rngState: number;
 }
 
-export type InputAction = "left" | "right" | "jump" | "slide" | "start";
+export type InputAction = "left" | "right" | "jump" | "slide" | "start" | "pause" | "mute";

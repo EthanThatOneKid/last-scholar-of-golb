@@ -15,6 +15,11 @@ const KEY_ACTIONS: Record<string, InputAction[]> = {
   s: ["slide"],
   S: ["slide"],
   Enter: ["start"],
+  p: ["pause"],
+  P: ["pause"],
+  Escape: ["pause"],
+  m: ["mute"],
+  M: ["mute"],
 };
 
 export function actionsForKey(key: string): InputAction[] {
