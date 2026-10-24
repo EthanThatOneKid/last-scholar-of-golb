@@ -97,6 +97,11 @@ export async function loadImages(
 
 export type SpriteAnchor = "bottom" | "center";
 
+/** EXPERIMENT: how a pixel-art sprite is scaled. bilinear blurs, nearest keeps hard but uneven
+ * pixels, snap rounds the size to whole multiples of the source pixel (and smooths when shrinking). */
+export type PixelMode = "bilinear" | "nearest" | "snap";
+export const pixelSprites = new Map<string, PixelMode>();
+
 /**
  * Draws the named sprite horizontally centered on x, scaled to `height` px tall (aspect ratio
  * kept). "bottom" puts the sprite's bottom edge at y, "center" its middle. A sheet of that name
@@ -127,6 +132,16 @@ export function drawSprite(
   }
   const img = assets?.image(name);
   if (!img || img.width <= 0 || img.height <= 0) return false;
+  const mode = pixelSprites.get(name);
+  if (mode) {
+    const k = height / img.height;
+    const dh = mode === "snap" && k >= 1 ? Math.round(k) * img.height : height;
+    const dtop = anchor === "bottom" ? y - dh : y - dh / 2;
+    ctx.imageSmoothingEnabled = mode === "bilinear" || k < 1;
+    ctx.drawImage(img, x - ((img.width / img.height) * dh) / 2, dtop, (img.width / img.height) * dh, dh);
+    ctx.imageSmoothingEnabled = true;
+    return true;
+  }
   const w = (img.width / img.height) * height;
   ctx.drawImage(img, x - w / 2, top, w, height);
   return true;

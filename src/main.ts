@@ -1,6 +1,6 @@
 import "./style.css";
 import { manifest } from "./asset-manifest";
-import { type Assets, loadImages, noAssets } from "./assets";
+import { type Assets, assetUrl, loadImages, noAssets, type PixelMode, pixelSprites } from "./assets";
 import { createAudioManager } from "./audio";
 import { config, defaultConfig } from "./config";
 import { mountDebugPanel } from "./debug-panel";
@@ -36,6 +36,13 @@ mountDebugPanel(document.body, config, defaultConfig);
 const input = createInput(window);
 const audio = createAudioManager();
 const state = createState(config);
+
+// EXPERIMENT: ?px=bilinear|nearest|snap swaps in the pixel-art gumdrop with that scaling mode.
+const pxParam = new URLSearchParams(location.search).get("px");
+if (pxParam === "bilinear" || pxParam === "nearest" || pxParam === "snap") {
+  manifest.images["obstacle.gumdrop"] = assetUrl("assets/images/gumdrop-px.png");
+  pixelSprites.set("obstacle.gumdrop", pxParam as PixelMode);
+}
 
 let mode: Mode = "title";
 let assets: Assets = noAssets;
