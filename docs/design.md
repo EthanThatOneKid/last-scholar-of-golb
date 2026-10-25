@@ -8,7 +8,10 @@ is ever committed.
 You play the Lich, the "last scholar" of entropy (the title is ironic), running
 through the Land of Ooo to end all life.
 
-## Core loop (v1: runner only)
+## Core loop
+
+The game is a Temple Run-style runner. The rhythm layer is cut (see "Cut" below).
+
 
 - Endless 3-lane runner, Temple Run / Subway Surfers style.
 - Camera: 2.5D pseudo-3D. Canvas/WebGL sprites scaled along a road.
@@ -22,12 +25,15 @@ through the Land of Ooo to end all life.
   its nine gems, and the Lich wishing for the extinction of all life. It flashes back
   into the run at the next tier. Wish line: "I wish for the extinction of all life."
 
+## Cut
+
+- **Rhythm layer** (cut 2026-10-24): inputs timed to the Lich's monologues,
+  spellcasting, and Finn and Jake as attackers. The game stays a Temple
+  Run-style runner. Finn and Jake are no longer planned, and nothing needs a
+  rhythm clock.
+
 ## Deferred
 
-- Rhythm layer: inputs timed to the Lich's monologues, spellcasting, heroes
-  (Finn and Jake) as attackers. Needs its own session.
-- Prismo's chamber: climax and the final wish. Design after the runner feels
-  good.
 - Audio plan. Prototype with original or placeholder sound only.
 
 ## Tech decisions
@@ -43,7 +49,8 @@ through the Land of Ooo to end all life.
 
 ## Monologue source text
 
-Saved for the deferred rhythm/monologue layer. Not used in the game yet.
+Saved while the rhythm layer was planned. That layer is cut, so this is reference
+text only and nothing in the game uses it. It could be reused as cutscene dialogue.
 
 > Fall. You are alone, child. There is only darkness for you. And the only death
 > for your people. These ancients are just the beginning. I recommend a great

@@ -83,8 +83,9 @@ player leaves the title screen.
 
 - **Sound names are not wired to game events yet.** Registering `sfx.*` or `music.*` files in the
   manifest loads them, but nothing calls `playSfx` or `playMusic` until the events are hooked up.
-- **The master clock is `audio.time`** (`AudioContext.currentTime`). The rhythm layer should chart
-  against it, not against `requestAnimationFrame` time. It freezes while paused.
+- **The master clock is `audio.time`** (`AudioContext.currentTime`). Use it, not
+  `requestAnimationFrame` time, to sync anything to sound (music loops, stingers). It freezes while
+  paused.
 
 ## Credits
 
