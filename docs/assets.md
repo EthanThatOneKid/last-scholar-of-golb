@@ -49,10 +49,13 @@ centered on the lane.
 | `crown.ice-king-crown`    | 6u     | center | Three rubies, worth 3. Drawn 1.3x larger in play. |
 | `portal`                  | ~2.2x portal radius | center | Prismo's portal.                |
 | `lich.idle`               | 17u    | bottom | **Sheet, in the game.** Stands in for run and jump until they have their own. |
-| `lich.run` / `lich.jump`  | 17u    | bottom | Sheets or images. Jump height is applied by the game. A contact shadow is drawn under every Lich sprite. |
+| `lich.run` / `lich.jump`  | 17u    | bottom | **Sheets, in the game.** Jump height is applied by the game. A contact shadow is drawn under every Lich sprite. |
 | `lich.slide`              | 7u     | bottom | Must stay low enough to pass under the arch. The idle sheet is never used for a slide. |
 | `lich.dead`               | 17u    | bottom | Shown once the Lich has hit something.         |
-| `lich.wish`               | 42% of screen height | bottom | Cutscene Lich, on the left of the screen. |
+| `lich.wish`               | 42% of screen height | bottom | **Sheet, in the game.** Cutscene Lich, on the left of the screen. |
+| `cutscene.prismo`         | ~2.8x prismo radius  | center | **In the game.** Cutscene Prismo shadow projection on the wall. |
+| `cutscene.room`           | 100% of screen       | top-left | **In the game.** Cutscene Time Room interior backdrop. |
+| `backdrop.candy-kingdom`  | Horizon height       | top-left | **In the game.** Candy Kingdom runner backdrop. |
 | `lich`                    | 17u    | bottom | Last resort for any pose without its own sprite. |
 
 The Lich tries, in order: `lich.dead` (when dead), `lich.<pose>`, `lich.idle` (not for slide), `lich`,
@@ -91,3 +94,9 @@ player leaves the title screen.
 | File | Source | License | Notes |
 | ---- | ------ | ------- | ----- |
 | `public/assets/images/lich-idle.png` | Generated with Adobe Firefly, supplied by the project owner. Original kept locally in `raw-assets/`. | Output terms: Adobe Firefly (confirm before any release). **Depicts the Lich from Adventure Time, which is not ours.** | Fan prototype, private repo only. Not cleared for a public release. 8-frame idle/cape loop, back view. |
+| `public/assets/images/candy-kingdom-bg.png` | AI-generated Adventure Time style background (Ghostshrimp style), refined for project. | Fan prototype, private repo only. | Candy Kingdom backdrop. |
+| `public/assets/images/prismo-time-room.png` | AI-generated Adventure Time style background, refined for project. | Fan prototype, private repo only. | Prismo's Time Room interior. |
+| `public/assets/images/prismo.png` | AI-generated Adventure Time character art, transparent cutout. | Fan prototype, private repo only. | Prismo shadow projection sprite. |
+| `public/assets/images/lich-run.png` | AI-generated sheet matching `lich-idle.png`, sliced via `tools/slice_sheet.py`. | Fan prototype, private repo only. | 8-frame grounded run cycle, back view. |
+| `public/assets/images/lich-jump.png` | AI-generated sheet matching `lich-idle.png`, sliced via `tools/slice_sheet.py`. | Fan prototype, private repo only. | 6-frame airborne leap cycle, back view. |
+| `public/assets/images/lich-wish.png` | AI-generated sheet matching `lich-idle.png`, sliced via `tools/slice_sheet.py`. | Fan prototype, private repo only. | 6-frame cutscene spellcasting loop, front view. |
