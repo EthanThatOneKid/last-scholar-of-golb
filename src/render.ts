@@ -339,7 +339,7 @@ function drawPortal(
   const p = project(rel, 1, c, w, h);
   const r = Math.max(4, p.scale * h * 0.16);
   const cy = p.y - r * 1.05;
-  if (drawSprite(ctx, assets, "portal", p.x, cy, r * 2.2, "center")) return;
+  if (drawSprite(ctx, assets, "portal", p.x, cy, r * 2.2, "center", time)) return;
   ctx.save();
   ctx.shadowColor = "#b388ff";
   ctx.shadowBlur = 24 * Math.min(1, p.scale * 2) + 6;

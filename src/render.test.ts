@@ -204,6 +204,25 @@ describe("render", () => {
         expect(sheetDraws(cut, [])).toBe(0);
       });
     });
+
+    it("animates the portal sheet with time", () => {
+      const frameAt = (time: number): number => {
+        let sx = -1;
+        const ctx = fakeCtx({ drawImage: (...a) => (sx = a[1] as number) });
+        const assets = {
+          image: () => undefined,
+          sheet: (n: string) =>
+            n === "portal"
+              ? { src: "", frames: 8, fps: 10, image: { width: 800, height: 100 } as unknown as Sprite }
+              : undefined,
+          missing: [],
+        };
+        render(ctx, { ...state("portal"), portalZ: 150 }, c, W, H, time, assets);
+        return sx;
+      };
+      expect(frameAt(0)).toBe(0);
+      expect(frameAt(0.3)).toBe(300);
+      expect(frameAt(0.8)).toBe(0); // loops
+    });
   });
 });
-

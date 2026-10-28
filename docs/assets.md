@@ -42,12 +42,12 @@ centered on the lane.
 
 | Name                      | Height | Anchor | Notes                                          |
 | ------------------------- | ------ | ------ | ---------------------------------------------- |
-| `obstacle.gumdrop`        | 9u     | bottom | Low block you jump over.                       |
-| `obstacle.candy-cane`     | 18u    | bottom | Full block, change lanes.                      |
-| `obstacle.licorice-arch`  | 14u    | bottom | Must leave clearance to slide under (below ~7u). |
-| `crown.bubblegum-tiara`   | 6u     | center | One blue gem, worth 1.                         |
-| `crown.ice-king-crown`    | 6u     | center | Three rubies, worth 3. Drawn 1.3x larger in play. |
-| `portal`                  | ~2.2x portal radius | center | Prismo's portal.                |
+| `obstacle.gumdrop`        | 9u     | bottom | **In the game.** Low block you jump over.      |
+| `obstacle.candy-cane`     | 18u    | bottom | **In the game.** Full block, change lanes.     |
+| `obstacle.licorice-arch`  | 14u    | bottom | **In the game.** Clear space below the bar (about 8u) to slide under. |
+| `crown.bubblegum-tiara`   | 6u     | center | **In the game.** One blue gem, worth 1.        |
+| `crown.ice-king-crown`    | 6u     | center | **In the game.** Three rubies, worth 3. Drawn 1.3x larger in play. |
+| `portal`                  | ~2.2x portal radius | center | **In the game, as a sheet** (24 frames, 8 fps, 3 s loop). Prismo's portal. |
 | `lich.idle`               | 17u    | bottom | **Sheet, in the game.** Stands in for run and jump until they have their own. |
 | `lich.run` / `lich.jump`  | 17u    | bottom | Sheets or images. Jump height is applied by the game. A contact shadow is drawn under every Lich sprite. |
 | `lich.slide`              | 7u     | bottom | Must stay low enough to pass under the arch. The idle sheet is never used for a slide. |
@@ -73,6 +73,9 @@ frame; only the cape or limbs should move. Feet-level is why `lich-idle.png` was
   are documented at the top of the script.
 - `public/assets/images/lich-idle.png` was made with:
   `python tools/slice_sheet.py <sheet.png> --frames 8 --out public/assets/images/lich-idle.png --anchor left-edge --align bottom`
+- The obstacles, crowns and portal were drawn by code: `python tools/gen_art.py` rewrites them (and
+  `--preview file.png` makes a contact sheet; see [`art-preview.png`](art-preview.png)). Edit the
+  script and rerun rather than editing the PNGs by hand.
 - Prompts for the remaining Lich poses are in [`lich-sprite-prompts.md`](lich-sprite-prompts.md).
 
 ## Audio
@@ -91,3 +94,6 @@ player leaves the title screen.
 | File | Source | License | Notes |
 | ---- | ------ | ------- | ----- |
 | `public/assets/images/lich-idle.png` | Generated with Adobe Firefly, supplied by the project owner. Original kept locally in `raw-assets/`. | Output terms: Adobe Firefly (confirm before any release). **Depicts the Lich from Adventure Time, which is not ours.** | Fan prototype, private repo only. Not cleared for a public release. 8-frame idle/cape loop, back view. |
+| `public/assets/images/gumdrop.png`, `candy-cane.png`, `licorice-arch.png` | Original. Drawn by `tools/gen_art.py`. | Project-owned, no outside source. | Generic candy shapes. |
+| `public/assets/images/tiara-bubblegum.png`, `crown-ice-king.png` | Original. Drawn by `tools/gen_art.py`. | Project-owned, no outside source. | Plain gold crowns with the gems from the design notes. They are generic crown shapes, not copies of any artwork. |
+| `public/assets/images/portal.png` | Original. Drawn by `tools/gen_art.py`. | Project-owned, no outside source. | 24-frame swirl loop. |
