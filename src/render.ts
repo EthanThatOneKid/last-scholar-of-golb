@@ -50,8 +50,18 @@ function hash(n: number): number {
   return s - Math.floor(s);
 }
 
-function drawBackdrop(ctx: CanvasRenderingContext2D, w: number, h: number, time: number): void {
+function drawBackdrop(
+  ctx: CanvasRenderingContext2D,
+  w: number,
+  h: number,
+  time: number,
+  assets?: Assets,
+): void {
   const hy = h * HORIZON;
+  const bgImg = assets?.image("backdrop.candy-kingdom");
+  if (bgImg) {
+    ctx.drawImage(bgImg, 0, 0, w, hy + 2);
+  } else {
   const sky = ctx.createLinearGradient(0, 0, 0, hy);
   sky.addColorStop(0, "#ff9ccf");
   sky.addColorStop(1, "#ffd9b8");
@@ -84,6 +94,8 @@ function drawBackdrop(ctx: CanvasRenderingContext2D, w: number, h: number, time:
     ctx.arc(cx + r * 1.2, cy + r * 0.2, r * 0.8, 0, TAU);
     ctx.arc(cx - r * 1.1, cy + r * 0.3, r * 0.7, 0, TAU);
     ctx.fill();
+  }
+
   }
 
   // ground beside road
@@ -479,37 +491,44 @@ function drawCutscene(
   const fs = Math.max(14, Math.min(w, h) * 0.04);
 
   // Cosmic chamber.
-  const bg = ctx.createRadialGradient(w / 2, h * 0.45, h * 0.05, w / 2, h * 0.45, h * 0.9);
-  bg.addColorStop(0, "#3b1c6e");
-  bg.addColorStop(1, "#07030f");
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, w, h);
-  for (let i = 0; i < 60; i++) {
-    const sx = ((Math.sin(i * 91.7) * 0.5 + 0.5) * w) | 0;
-    const sy = ((Math.sin(i * 47.3 + 1) * 0.5 + 0.5) * h) | 0;
-    ctx.globalAlpha = 0.35 + 0.65 * Math.abs(Math.sin(time * 1.5 + i));
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(sx, sy, 2, 2);
+  const bgImg = assets?.image("cutscene.room");
+  if (bgImg) {
+    ctx.drawImage(bgImg, 0, 0, w, h);
+  } else {
+    const bg = ctx.createRadialGradient(w / 2, h * 0.45, h * 0.05, w / 2, h * 0.45, h * 0.9);
+    bg.addColorStop(0, "#3b1c6e");
+    bg.addColorStop(1, "#07030f");
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, w, h);
+    for (let i = 0; i < 60; i++) {
+      const sx = ((Math.sin(i * 91.7) * 0.5 + 0.5) * w) | 0;
+      const sy = ((Math.sin(i * 47.3 + 1) * 0.5 + 0.5) * h) | 0;
+      ctx.globalAlpha = 0.35 + 0.65 * Math.abs(Math.sin(time * 1.5 + i));
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(sx, sy, 2, 2);
+    }
+    ctx.globalAlpha = 1;
   }
-  ctx.globalAlpha = 1;
 
-  // Prismo: a floating placeholder orb.
+  // Prismo: flat 2D shadow projection or floating placeholder orb.
   const px = w * 0.72;
   const py = h * 0.36 + Math.sin(time * 1.6) * h * 0.012;
   const pr = h * 0.11;
-  ctx.save();
-  ctx.shadowColor = "#b78cff";
-  ctx.shadowBlur = pr * 0.8;
-  ctx.fillStyle = "#c9a8ff";
-  ctx.beginPath();
-  ctx.arc(px, py, pr, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
-  ctx.fillStyle = "#2a1450";
-  ctx.beginPath();
-  ctx.arc(px - pr * 0.35, py - pr * 0.1, pr * 0.1, 0, Math.PI * 2);
-  ctx.arc(px + pr * 0.35, py - pr * 0.1, pr * 0.1, 0, Math.PI * 2);
-  ctx.fill();
+  if (!drawSprite(ctx, assets, "cutscene.prismo", px, py + pr * 0.4, pr * 2.8, "center", time)) {
+    ctx.save();
+    ctx.shadowColor = "#b78cff";
+    ctx.shadowBlur = pr * 0.8;
+    ctx.fillStyle = "#c9a8ff";
+    ctx.beginPath();
+    ctx.arc(px, py, pr, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+    ctx.fillStyle = "#2a1450";
+    ctx.beginPath();
+    ctx.arc(px - pr * 0.35, py - pr * 0.1, pr * 0.1, 0, Math.PI * 2);
+    ctx.arc(px + pr * 0.35, py - pr * 0.1, pr * 0.1, 0, Math.PI * 2);
+    ctx.fill();
+  }
 
   // The Enchiridion, nine gems glowing brighter as the wish nears.
   const ex = w * 0.5;
@@ -581,7 +600,7 @@ export function render(
     drawCutscene(ctx, state, c, width, height, time, assets);
     return;
   }
-  drawBackdrop(ctx, width, height, time);
+  drawBackdrop(ctx, width, height, time, assets);
   drawRoad(ctx, state, c, width, height);
   drawScenery(ctx, state, c, width, height);
 
