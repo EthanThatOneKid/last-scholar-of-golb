@@ -86,9 +86,16 @@ The game needs a keyboard. Click it once so it has focus.
 
 ## Theme: fall
 
+The Lich, in "Escape from the Citadel":
+
+> Fall. You are alone, child. There is only darkness for you, and only death for
+> your people. These ancients are just the beginning. I will command a great and
+> terrible army, and we will sail to a billion worlds. We will sail until every
+> light has been extinguished. You are strong, child, but I am beyond strength. I
+> am the end, and I have come for you, Finn.
+
 Ooo has already fallen. The title is ironic, and the Lich is what is left of its
-scholarship. The monologue the character is known for opens with the word. The
-run is a fall you keep correcting, and it stops when you miss.
+scholarship. The run is a fall you keep correcting, and it stops when you miss.
 
 ## Credits
 
