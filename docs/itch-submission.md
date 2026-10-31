@@ -1,15 +1,15 @@
-# itch.io submission — Karni's October Game Jam 2026
+# itch.io submission for Karni's October Game Jam 2026
 
 Everything needed to put this on itch.io and submit it to
 [the jam](https://itch.io/jam/karni-october-game-jam-2026). The copy blocks are
 ready to paste; the build, cover and screenshots are in `docs/itch/` and
 `raw-assets/itch/`.
 
-- **Deadline:** 2026-11-01 06:59 UTC — Saturday 2026-10-31, 11:59 PM PDT.
-- **Theme:** FALL. The jam accepts any interpretation (season, action, idea) and
-  allows AI use, but asks for a written AI disclosure.
-- **Judging:** one judge, on effort. A finished, playable demo beats a polished
-  unfinished one.
+- **Deadline:** 2026-11-01 06:59 UTC, which is Saturday 2026-10-31 at 11:59 PM
+  PDT.
+- **Theme:** FALL. The jam takes it as a season, an action or an idea, and allows
+  AI use, but asks for a written AI disclosure.
+- **Judging:** one judge, on effort.
 
 ## What ships
 
@@ -51,20 +51,20 @@ Tags: `endless-runner`, `runner`, `arcade`, `one-hit-kill`, `fan-game`,
 
 ## Short description
 
-> You are the Lich. Collect the nine gems, reach Prismo, and wish for the end of
-> all life. One hit ends the run.
+> You are the Lich, running the Candy Kingdom for the nine gems that open
+> Prismo's portal. One hit ends the run.
 
 ## Description
 
 ```markdown
-**Everyone else is gone. The books remain.**
+Everyone else is gone. The books remain.
 
-You are the Lich — the last scholar of Golb — running through the Candy Kingdom
-to gather the nine gems of the Enchiridion. Nine gems open Prismo's portal. On
-the other side is a wish, a six-second cutscene, and then the next tier: faster,
-denser, same goal.
+You are the Lich, the last scholar of Golb. You run through the Candy Kingdom
+collecting the nine gems of the Enchiridion. Nine gems open Prismo's portal. Step
+through it and the Lich makes his wish. Then the next tier starts, faster and
+more crowded than the last.
 
-One hit ends the run. Nothing carries over but the tier you reached.
+One hit ends the run. The tier you reached is the score.
 
 ## Controls
 
@@ -75,63 +75,49 @@ One hit ends the run. Nothing carries over but the tier you reached.
 | S / ↓ | slide |
 | P / Esc | pause |
 | M | mute |
-| Space / Enter | start · restart · skip the cutscene (after 1s) |
+| Space / Enter | start, restart, skip the cutscene (after 1s) |
 
-Keyboard required. Click the game once so it has focus.
+The game needs a keyboard. Click it once so it has focus.
 
-## The demo
+## What is in the demo
 
-- Three lanes, three obstacles, two crown types
-- Nine gems to the portal, one hit to die
+- Three lanes and three obstacles
+- Two crown types, worth one and three gems
 - A cutscene at the portal, then a harder tier
-- Tier reached is the score
 - The portal is a minute or two in if you play well
 
-## Theme: FALL
+## Theme: fall
 
-The game is a fall in all three senses the jam lists. A civilization has already
-fallen — the title is ironic, and the Lich is the last scholar of an ending. The
-monologue the character is known for starts with the word. And the run itself is
-a controlled fall through the Candy Kingdom that ends the moment you stop
-dodging.
+Ooo has already fallen. The title is ironic, and the Lich is what is left of its
+scholarship. The monologue the character is known for opens with the word. The
+run is a fall you keep correcting, and it stops when you miss.
 
 ## Credits
 
-- Design, code, tuning: Ethan That One Kid
-- Lich sprite sheets: AI-generated with Adobe Firefly, sliced with
-  `tools/slice_sheet.py`
-- Candy Kingdom backdrop, Prismo's Time Room, Prismo cutout: AI-generated in an
-  Adventure Time style, refined for the project
-- Obstacles, crowns and portal: original, drawn by code (`tools/gen_art.py`)
-- Fonts: system UI
+Design, code and tuning: Ethan That One Kid.
+
+The Lich sprite sheets were generated with Adobe Firefly and sliced with a
+script. The Candy Kingdom backdrop, Prismo's Time Room and the Prismo cutout were
+generated in an Adventure Time style and cleaned up for the project. The
+obstacles, crowns and portal are drawn by code. Fonts are system UI.
 
 ## AI disclosure
 
-The jam asks for detail, so here is the whole of it.
-
-- **Art** — AI-generated. The Lich sprite sheets (idle, run, jump, slide, wish)
-  were generated with Adobe Firefly and sliced with a script. The Candy Kingdom
-  backdrop, Prismo's Time Room and the Prismo cutout were AI-generated in an
-  Adventure Time style and refined for the project. The obstacles, crowns and
-  portal are not AI: they are drawn by code.
-- **Code** — written with AI coding assistants under human direction and review.
-  Architecture, tuning and the calls on what to cut were mine; large parts of
-  the implementation were drafted by assistants and reviewed by me.
-- **Writing** — the wish line ("I wish for the extinction of all life.") is
-  quoted from Adventure Time. The title-screen subtitle is original. The longer
-  Lich monologue is quoted in the design notes but does not appear in the game.
-- **Audio** — none. No music or sound effects ship.
+Art is AI-generated: the Lich sheets came from Adobe Firefly, and the Candy
+Kingdom backdrop, Prismo's Time Room and Prismo cutout were generated in an
+Adventure Time style and cleaned up. The obstacles, crowns and portal are drawn
+by code, not AI. The code was written with AI coding assistants under my
+direction and review. The wish line is quoted from Adventure Time, and the title
+screen subtitle is mine. The build has no audio at all.
 
 ## Known issues
 
-- **Silent.** The audio system is wired (volume, mute, pause, a master clock) but
-  no sound files ship yet.
-- **Keyboard only.** No touch controls.
-- **No death sprite.** `lich.dead` has no sheet; the death pose falls back to
-  another Lich sheet.
-- **Fan work.** Unofficial and non-commercial. Adventure Time and its characters
-  belong to Cartoon Network / Warner Bros. Discovery. No affiliation, no money
-  changes hands. Made for a free community jam and taken down on request.
+No audio yet. The audio system is wired but no sound files ship. The game needs a
+keyboard, and the death pose falls back to another sprite.
+
+This is an unofficial, non-commercial fan work. Adventure Time belongs to Cartoon
+Network / Warner Bros. Discovery. No affiliation, and I will take it down on
+request.
 ```
 
 ## Submit
@@ -139,8 +125,8 @@ The jam asks for detail, so here is the whole of it.
 1. itch.io → **Dashboard → Create new project**. Fill the fields above.
 2. Upload the zip, tick **This file will be played in the browser**, then
    **Save & view page**.
-3. **Test the page's own player**, not just the local build: keyboard focus
-   after a click, no console errors, sprites resolve from the zip root.
+3. **Test the page's own player** after upload: click once for keyboard focus,
+   watch for console errors, confirm sprites resolve from the zip root.
 4. Open [the jam page](https://itch.io/jam/karni-october-game-jam-2026) →
    **Submit your project** → pick the game → submit.
 5. Confirm the game appears in the jam's submission list before the deadline.
@@ -151,17 +137,17 @@ The jam asks for detail, so here is the whole of it.
 - [ ] Build is from the commit you mean to ship (`npm run build`, then re-zip)
 - [ ] Zip has `index.html` at the root and plays from the itch player
 - [ ] Cover, 5 screenshots and the description are uploaded
-- [ ] AI disclosure is on the page, not just in the repo
+- [ ] AI disclosure is on the page itself
 - [ ] Fan-work disclaimer is on the page
 - [ ] Theme tie-in is in the description
-- [ ] Project submitted to the jam, not just published
+- [ ] Project submitted to the jam (publishing alone does not enter it)
 - [ ] Page loads on a phone enough to show the "keyboard required" line
 
 ## The one open decision
 
-The repo's asset rules say the art is a **private fan prototype, not cleared for
-a public release** — the Lich, the Candy Kingdom, Prismo and the title are
-Adventure Time IP. A jam entry is a public release. Options, cheapest first:
+The repo's asset rules call the art a **private fan prototype, not cleared for a
+public release**. The Lich, the Candy Kingdom, Prismo and the title are Adventure
+Time IP, and a jam entry is a public release. Options, cheapest first:
 
 1. **Ship as an unofficial fan work** with the disclaimer above. Common in jams,
    still a takedown risk, and it contradicts `docs/assets.md`.
