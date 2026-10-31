@@ -32,7 +32,9 @@ function resize(): void {
 resize();
 window.addEventListener("resize", resize);
 
-mountDebugPanel(document.body, config, defaultConfig);
+// Tuning tool, dev builds only. The published game must not ship a panel that lets players
+// rewrite the run's speed, density and gem goal.
+if (import.meta.env.DEV) mountDebugPanel(document.body, config, defaultConfig);
 const input = createInput(window);
 const audio = createAudioManager();
 const state = createState(config);

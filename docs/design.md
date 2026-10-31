@@ -52,11 +52,11 @@ The game is a Temple Run-style runner. The rhythm layer is cut (see "Cut" below)
 Saved while the rhythm layer was planned. That layer is cut, so this is reference
 text only and nothing in the game uses it. It could be reused as cutscene dialogue.
 
-> Fall. You are alone, child. There is only darkness for you. And the only death
-> for your people. These ancients are just the beginning. I recommend a great
-> and terrible army. We will sail to a billion worlds. We will sail until every
-> light has been extinguished. You are strong, child. But I am beyond strength.
-> I am the end. And I have come for you.
+> Fall. You are alone, child. There is only darkness for you, and only death for
+> your people. These ancients are just the beginning. I will command a great and
+> terrible army, and we will sail to a billion worlds. We will sail until every
+> light has been extinguished. You are strong, child, but I am beyond strength. I
+> am the end, and I have come for you, Finn.
 
 > Before there was time. Before there was anything. There was nothing. And
 > before there was nothing. There were monsters.
