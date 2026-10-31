@@ -50,7 +50,7 @@ centered on the lane.
 | `portal`                  | ~2.2x portal radius | center | **In the game, as a sheet** (24 frames, 8 fps, 3 s loop). Prismo's portal. |
 | `lich.idle`               | 17u    | bottom | **Sheet, in the game.** Stands in for run and jump until they have their own. |
 | `lich.run` / `lich.jump`  | 17u    | bottom | **Sheets, in the game.** Jump height is applied by the game. A contact shadow is drawn under every Lich sprite. |
-| `lich.slide`              | 7u     | bottom | Must stay low enough to pass under the arch. The idle sheet is never used for a slide. |
+| `lich.slide`              | 7u     | bottom | **Sheet, in the game.** Must stay low enough to pass under the arch. The idle sheet is never used for a slide. |
 | `lich.dead`               | 17u    | bottom | Shown once the Lich has hit something.         |
 | `lich.wish`               | 42% of screen height | bottom | **Sheet, in the game.** Cutscene Lich, on the left of the screen. |
 | `cutscene.prismo`         | ~2.8x prismo radius  | center | **In the game.** Cutscene Prismo shadow projection on the wall. |
@@ -106,3 +106,4 @@ player leaves the title screen.
 | `public/assets/images/lich-run.png` | AI-generated sheet matching `lich-idle.png`, sliced via `tools/slice_sheet.py`. | Fan prototype, private repo only. | 8-frame grounded run cycle, back view. |
 | `public/assets/images/lich-jump.png` | AI-generated sheet matching `lich-idle.png`, sliced via `tools/slice_sheet.py`. | Fan prototype, private repo only. | 6-frame airborne leap cycle, back view. |
 | `public/assets/images/lich-wish.png` | AI-generated sheet matching `lich-idle.png`, sliced via `tools/slice_sheet.py`. | Fan prototype, private repo only. | 6-frame cutscene spellcasting loop, front view. |
+| `public/assets/images/lich-slide.png` | AI-generated sheet matching `lich-idle.png`, sliced via `tools/slice_sheet.py`. | Fan prototype, private repo only. | 4-frame grounded glide cycle, back view. |

@@ -24,6 +24,8 @@ export const manifest: AssetManifest = {
     "lich.run": { src: assetUrl("assets/images/lich-run.png"), frames: 8, fps: 12 },
     // 6-frame airborne leap cycle, back view. Cell 622x369.
     "lich.jump": { src: assetUrl("assets/images/lich-jump.png"), frames: 6, fps: 8 },
+    // 4-frame grounded slide cycle, back view. Cell 432x273.
+    "lich.slide": { src: assetUrl("assets/images/lich-slide.png"), frames: 4, fps: 8 },
     // 6-frame cutscene spellcasting loop, front view. Cell 430x394.
     "lich.wish": { src: assetUrl("assets/images/lich-wish.png"), frames: 6, fps: 6 },
   },
