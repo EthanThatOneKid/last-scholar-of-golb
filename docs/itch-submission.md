@@ -106,12 +106,12 @@ Kingdom backdrop, Prismo's Time Room and Prismo cutout were generated in an
 Adventure Time style and cleaned up. The obstacles, crowns and portal are drawn
 by code, not AI. The code was written with AI coding assistants under my
 direction and review. The wish line is quoted from Adventure Time, and the title
-screen subtitle is mine. The build has no audio at all.
+screen subtitle is mine.
 
 ## Known issues
 
-No audio yet. The audio system is wired but no sound files ship. The game needs a
-keyboard, and the death pose falls back to another sprite.
+The build is silent. The audio system is wired but there are no sound files. The
+game needs a keyboard, and the death pose falls back to another sprite.
 
 This is an unofficial, non-commercial fan work. Adventure Time belongs to Cartoon
 Network / Warner Bros. Discovery. No affiliation, and I will take it down on
