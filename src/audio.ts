@@ -1,7 +1,7 @@
 // Web Audio wrapper: volume, mute, pause, one-shot sound effects, looping music, and a master
 // clock. `time` is AudioContext.currentTime, which drifts neither with frame rate nor with
-// requestAnimationFrame jitter, so the future rhythm layer should chart against it. It stops while
-// the manager is paused, which freezes any music and charts together.
+// requestAnimationFrame jitter, so anything that has to line up with sound should use it. It stops
+// while the manager is paused, which freezes any music with it.
 //
 // Browsers keep audio locked until a user gesture, so call unlock() from a key or click handler.
 
