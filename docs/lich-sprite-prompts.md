@@ -67,11 +67,21 @@ want it.
 > height of a standing figure**. The cloak lies flat behind and ripples slightly. Keep the whole
 > figure low and wide so that it could pass under a bar.
 
+Slice it tight, with **no** `--height-fraction`: the game draws `lich.slide` at its own low height
+(7u), so the figure should fill its cell.
+
 ### `lich.dead`
 
-> Pose: viewed from behind. A looping cycle of 4 frames in a 2x2 grid. The figure has been struck
-> and is slumped on its knees, head bowed, one skeletal hand on the ground. The cloak settles and
-> sways slightly, as if breathing. The last frame flows into the first.
+> Pose: viewed from behind. A looping 4-frame cycle in a 2x2 grid. The figure has just been struck
+> and is kneeling, head bowed, shoulders slumped, one skeletal hand pressed flat on the ground. The
+> knees and the planted hand rest on the same ground baseline in every cell. **Draw the figure at
+> the same scale as the standing figure in the reference image, so it is clearly shorter, about 60
+> percent of the standing height, with empty space above it.** Only the cloak and a slow breathing
+> rise of the shoulders move: the cloak settles and sways slightly. The last frame flows into the
+> first. No falling, no lying flat, no motion lines, no impact stars.
+
+Slice it with `--align bottom --height-fraction 0.6`. The game draws `lich.dead` at standing height,
+so without the padding a tight crop of a kneeling figure would be blown up about 1.7x.
 
 ### `lich.wish` (cutscene)
 
@@ -91,7 +101,9 @@ want it.
   `python tools/slice_sheet.py sheet.png --frames 6 --out public/assets/images/lich-jump.png --preview preview.png`
   Use `--anchor left-edge` if a cape tip flares into the head area (as in the idle sheet).
   `--align bottom` (feet level, the default to use for grounded poses) puts the sprite's bottom
-  edge on the ground line; `--align top` keeps heads level instead. Open the preview and check that the
+  edge on the ground line; `--align top` keeps heads level instead.
+  `--height-fraction F` pads the cell so a shorter pose stays at standing scale (the dead pose uses
+  0.6). Leave it off for the slide, which is drawn at its own height. Open the preview and check that the
   red center line passes through the same point on the body in every frame.
 - **Registering:** add the strip to `sheets` in `src/asset-manifest.ts` with the frame count, and add
   a credits row in [`assets.md`](assets.md).

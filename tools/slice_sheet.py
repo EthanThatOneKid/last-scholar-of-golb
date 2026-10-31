@@ -21,6 +21,13 @@ while the cape moves:
   center     the center of the frame's bounding box.
 
 --align top keeps heads level; --align bottom keeps feet level.
+
+--height-fraction F pads the cell so the tallest frame is only F of the cell height. Use it for a pose
+that is drawn at the same scale as the standing figure but is shorter, like a kneeling Lich (F=0.6):
+the game draws every sprite at a fixed on-screen height, so without it a short figure cropped tight
+would be blown up to standing size. The padding goes above the figure with --align bottom and below it
+with --align top. Leave it off when the renderer draws the sprite at its own height, as it does for
+the slide.
 """
 
 import argparse
@@ -61,6 +68,7 @@ def main():
     ap.add_argument("--preview", help="optional checkerboard preview with the center line drawn")
     ap.add_argument("--anchor", choices=["head", "left-edge", "center"], default="head")
     ap.add_argument("--align", choices=["top", "bottom"], default="top")
+    ap.add_argument("--height-fraction", type=float, help="tallest frame / cell height, in (0, 1]")
     ap.add_argument("--alpha-threshold", type=int, default=8)
     args = ap.parse_args()
 
@@ -88,6 +96,10 @@ def main():
             f["ax"] = f["head"]
 
     cell_h = max(f["y1"] - f["y0"] + 1 for f in frames)
+    if args.height_fraction is not None:
+        if not 0 < args.height_fraction <= 1:
+            sys.exit("--height-fraction must be in (0, 1]")
+        cell_h = int(np.ceil(cell_h / args.height_fraction))
     half = int(np.ceil(max(max(f["ax"] - f["x0"], f["x1"] + 1 - f["ax"]) for f in frames))) + 2
     cell_w = half * 2
 
