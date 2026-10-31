@@ -68,14 +68,12 @@ One hit ends the run. The tier you reached is the score.
 
 ## Controls
 
-| Key | Action |
-| --- | ------ |
-| A / D or ← / → | change lanes |
-| W / ↑ / Space | jump |
-| S / ↓ | slide |
-| P / Esc | pause |
-| M | mute |
-| Space / Enter | start, restart, skip the cutscene (after 1s) |
+- A / D or left / right: change lanes
+- W / up / space: jump
+- S / down: slide
+- P or Esc: pause
+- M: mute
+- Space or Enter: start, restart, skip the cutscene after the first second
 
 The game needs a keyboard. Click it once so it has focus.
 
