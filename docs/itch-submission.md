@@ -94,8 +94,9 @@ The Lich, in "Escape from the Citadel":
 > light has been extinguished. You are strong, child, but I am beyond strength. I
 > am the end, and I have come for you, Finn.
 
-Ooo has already fallen. The title is ironic, and the Lich is what is left of its
-scholarship. The run is a fall you keep correcting, and it stops when you miss.
+The Candy Kingdom is still standing. The Lich gathers the nine gems that open
+Prismo's portal, because Prismo grants one wish and his is the extinction of all
+life. Every run is the fall he is working toward, and one hit ends the run.
 
 ## Credits
 
